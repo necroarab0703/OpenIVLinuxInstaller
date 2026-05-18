@@ -1,366 +1,411 @@
 #!/bin/bash
 ################################################################################
-# OpenIV Linux Installer - All-in-One Installation Script
-# Automatically sets up Wine and installs OpenIV on Linux
-# Usage: chmod +x OpenIVLinuxInstaller.sh && ./OpenIVLinuxInstaller.sh
+# OpenIV Linux Installer — Portable, Zero-Input, Rootless AppImage Wrapper
+#
+# Downloads a portable Wine runtime, creates a Wine prefix, installs .NET,
+# downloads & installs OpenIV, detects GTA V, and creates self-contained
+# desktop launchers — all without sudo, package managers, or user prompts.
+#
+# Usage:  chmod +x OpenIVLinuxInstaller.sh && ./OpenIVLinuxInstaller.sh
 ################################################################################
+set -euo pipefail
 
-if [ ! -x "$(readlink -f "$0")" ]; then
-    chmod +x "$(readlink -f "$0")"
-fi
-
-if [ -z "$BASH_VERSION" ]; then
+# ──────────────────────────────────────────────────────────────────────────────
+# Shell & Self-Exec Guard
+# ──────────────────────────────────────────────────────────────────────────────
+if [ -z "${BASH_VERSION:-}" ]; then
     if command -v bash >/dev/null 2>&1; then
         exec bash "$0" "$@"
-    else
-        echo "This script must be run with bash" >&2
-        exit 1
     fi
+    echo "This script must be run with bash" >&2
+    exit 1
 fi
 
-OPENIV_DIR="$HOME/.OpenIV"
-OPENIV_PREFIX="$OPENIV_DIR/prefix"
-WINE_BINARY="wine"
-WINEARCH="win64"
-WINEDEBUG="-all"
+# ──────────────────────────────────────────────────────────────────────────────
+# Paths  (all under $HOME, no root)
+# ──────────────────────────────────────────────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APPDIR="${APPDIR:-$SCRIPT_DIR}"          # AppImage mount point when bundled
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 
+DATA_DIR="$XDG_DATA_HOME/openiv-linux"
+PREFIX_DIR="$DATA_DIR/prefix"
+DOWNLOADS_DIR="$DATA_DIR/downloads"
+RUNTIME_DIR="$DATA_DIR/wine-runtime"
+BIN_DIR="$DATA_DIR/bin"
+
+CACHE_DIR="$DATA_DIR/cache"
+WINE_CACHE_DIR="$CACHE_DIR/wine"
+
+WINE_VERSION="11.9"
+WINE_FLAVOR="staging-amd64-wow64"
+WINE_TAG="$WINE_VERSION"
+WINE_TARBALL="wine-${WINE_VERSION}-${WINE_FLAVOR}.tar.xz"
+WINE_URL="https://github.com/Kron4ek/Wine-Builds/releases/download/${WINE_TAG}/${WINE_TARBALL}"
+WINE_DIR="$RUNTIME_DIR/wine-${WINE_VERSION}-${WINE_FLAVOR}"
+WINE_BINARY="$WINE_DIR/bin/wine"
+WINE_SERVER="$WINE_DIR/bin/wineserver"
+WINEBOOT="$WINE_DIR/bin/wineboot"
+WINE_CFG="$WINE_DIR/bin/winecfg"
+
+WINETRICKS_URL="https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks"
+WINETRICKS_BIN="$BIN_DIR/winetricks"
+
+OPENIV_INSTALLER_URL="https://openiv.com/webiv/guest.php?get=0"
+OPENIV_INSTALLER="$DOWNLOADS_DIR/ovisetup.exe"
+
+OPENIV_EXE=""
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Terminal Colors  (safe for non-TTY)
+# ──────────────────────────────────────────────────────────────────────────────
 if [ -t 1 ]; then
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'
-    CYAN='\033[0;36m'
-    BOLD='\033[1m'
+    RED='\033[0;31m';    GREEN='\033[0;32m';   YELLOW='\033[1;33m'
+    BLUE='\033[0;34m';   CYAN='\033[0;36m';    BOLD='\033[1m'
     NC='\033[0m'
 else
     RED=''; GREEN=''; YELLOW=''; BLUE=''; CYAN=''; BOLD=''; NC=''
 fi
 
-print_header() {
-    echo ""
-    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BOLD}${CYAN}$1${NC}"
-    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo ""
-}
+log_header() { echo -e "${CYAN}━━━ $* ━━━${NC}"; }
+log_step()   { echo -e "  ${BLUE}•${NC} $*"; }
+log_ok()     { echo -e "  ${GREEN}✓${NC} $*"; }
+log_warn()   { echo -e "  ${YELLOW}⚠${NC} $*"; }
+log_err()    { echo -e "  ${RED}✗${NC} $*" >&2; }
 
-print_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
-print_info() { echo -e "${CYAN}[INFO]${NC} $1"; }
-print_success() { echo -e "${GREEN}[✓]${NC} $1"; }
-print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
-print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-print_progress() { echo -e "${GREEN}  →${NC} $1"; }
-
-download_file() {
-    local url=$1 output=$2 description=$3
-    print_progress "Downloading $description..."
-    if command -v curl &> /dev/null; then
-        if curl -# -L "$url" -o "$output"; then return 0; fi
+# ──────────────────────────────────────────────────────────────────────────────
+# Download Helper  (curl preferred, wget fallback; silent, no progress)
+# ──────────────────────────────────────────────────────────────────────────────
+silent_download() {
+    local url="$1" out="$2" desc="$3"
+    log_step "Downloading $desc ..."
+    mkdir -p "$(dirname "$out")"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$url" -o "$out" && { log_ok "$desc — done"; return 0; }
     fi
-    if command -v wget &> /dev/null; then
-        if wget --progress=bar:force:noscroll "$url" -O "$output" 2>/dev/null; then return 0; fi
+    if command -v wget >/dev/null 2>&1; then
+        wget -q "$url" -O "$out" && { log_ok "$desc — done"; return 0; }
     fi
-    print_error "Failed to download $description"
+    log_err "Failed to download $desc (neither curl nor wget succeeded)"
     return 1
 }
 
-detect_distro() {
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        DISTRO=$ID
-        VERSION=$VERSION_ID
-    else
-        print_error "Could not detect Linux distribution"
-        exit 1
-    fi
+# ──────────────────────────────────────────────────────────────────────────────
+# 1.  Directory Setup
+# ──────────────────────────────────────────────────────────────────────────────
+setup_directories() {
+    mkdir -p "$PREFIX_DIR" "$DOWNLOADS_DIR" "$RUNTIME_DIR" "$BIN_DIR" "$CACHE_DIR" "$WINE_CACHE_DIR"
 }
 
-check_dependencies() {
-    print_header "Dependency Verification"
+# ──────────────────────────────────────────────────────────────────────────────
+# 2.  Portable Wine Runtime
+# ──────────────────────────────────────────────────────────────────────────────
+ensure_portable_wine() {
+    log_header "Portable Wine Runtime"
 
-    local missing_deps=""
-    for dep in wine winetricks wget curl 7z tar jq; do
-        print_progress "Checking for $dep..."
-        if ! command -v "$dep" &> /dev/null; then
-            missing_deps+="$dep "
-        else
-            print_success "$dep is installed"
-        fi
-    done
-
-    if ! command -v unzstd &> /dev/null && ! command -v zstd &> /dev/null; then
-        missing_deps+="zstd "
-        print_error "zstd or unzstd is not installed"
-    else
-        print_success "zstd support is available"
-    fi
-
-    if [ -n "$missing_deps" ]; then
-        print_warning "Missing dependencies: $missing_deps"
-        install_dependencies
-    else
-        print_success "All required dependencies are installed!"
-    fi
-    echo ""
-}
-
-install_dependencies() {
-    print_step "Installing dependencies for $DISTRO..."
-    case $DISTRO in
-        "arch"|"cachyos"|"endeavouros"|"xerolinux"|"manjaro"|"artix")
-            sudo pacman -S --needed wine winetricks wget curl p7zip tar jq zstd
-            ;;
-        "fedora"|"nobara")
-            sudo dnf install -y wine winetricks wget curl p7zip p7zip-plugins tar jq zstd
-            ;;
-        "opensuse-tumbleweed"|"opensuse-leap"|"suse")
-            sudo zypper install -y wine winetricks wget curl p7zip tar jq zstd
-            ;;
-        "ubuntu"|"debian"|"linuxmint"|"pop"|"elementary"|"zorin"|"pikaos"|"kali"|"parrot")
-            sudo dpkg --add-architecture i386
-            sudo apt update
-            sudo apt install -y wine wine64 wine32 winetricks wget curl p7zip-full p7zip tar jq zstd
-            ;;
-        "void")
-            sudo xbps-install -S wine winetricks wget curl p7zip tar jq zstd
-            ;;
-        "solus")
-            sudo eopkg install wine winetricks wget curl p7zip tar jq zstd
-            ;;
-        "gentoo"|"calculate")
-            sudo emerge --ask=n sys-apps/util-linux app-emulation/wine app-emulation/winetricks net-misc/wget net-misc/curl app-arch/p7zip app-arch/tar app-misc/jq app-arch/zstd
-            ;;
-        "nixos")
-            print_info "On NixOS, please add these to your configuration.nix:"
-            print_info "  programs.wine.enable = true;"
-            print_info "  programs.winetricks.enable = true;"
-            print_info "  environment.systemPackages = [ wget curl p7zip jq zstd ];"
-            print_info "Then run: sudo nixos-rebuild switch"
-            echo ""
-            print_warning "Cannot auto-install on NixOS. Please install dependencies manually."
-            exit 1
-            ;;
-        *)
-            print_error "Unsupported distribution: $DISTRO"
-            print_info "Please install the following packages manually:"
-            print_info "wine winetricks wget curl p7zip tar jq zstd"
-            exit 1
-            ;;
-    esac
-    print_success "All dependencies installed!"
-    echo ""
-}
-
-cleanup_wine() {
-    print_step "Stopping any running Wine processes..."
-    WINEPREFIX="$OPENIV_PREFIX" wineserver -k 2>/dev/null || true
-    sleep 1
-    print_success "Wine processes stopped"
-}
-
-setup_wine_prefix() {
-    print_header "Wine Prefix Setup"
-
-    mkdir -p "$OPENIV_DIR"
-
-    cleanup_wine
-
-    print_step "Creating Wine prefix at $OPENIV_PREFIX..."
-    export WINEPREFIX="$OPENIV_PREFIX"
-    export WINEARCH="win64"
-
-    print_progress "Running wineboot (initializing Wine prefix)..."
-    wineboot -u 2>/dev/null || true
-
-    if [ ! -d "$OPENIV_PREFIX/drive_c" ]; then
-        print_error "Wine prefix creation failed"
-        exit 1
-    fi
-    print_success "Wine prefix created successfully"
-
-    print_step "Setting Windows version to Windows 10..."
-    winetricks --unattended --force --no-isolate --optout win10 2>/dev/null || true
-    print_success "Windows 10 compatibility set"
-
-    print_step "Installing .NET Framework 4.8 (this may take 10-15 minutes)..."
-    print_info "OpenIV requires .NET Framework 4.8 to run. Please be patient."
-    winetricks --unattended --force --no-isolate --optout dotnet48 2>/dev/null || true
-    print_success ".NET Framework 4.8 installation completed"
-
-    print_step "Installing core fonts..."
-    winetricks --unattended --force --no-isolate --optout corefonts 2>/dev/null || true
-    print_success "Core fonts installed"
-
-    print_step "Installing Visual C++ Redistributables..."
-    winetricks --unattended --force --no-isolate --optout vcrun2022 2>/dev/null || true
-    print_success "VC++ Redistributables installed"
-
-    print_info "Wine prefix setup complete!"
-    echo ""
-}
-
-download_openiv() {
-    print_header "OpenIV Download"
-
-    mkdir -p "$OPENIV_DIR/downloads"
-
-    local installer_path="$OPENIV_DIR/downloads/ovisetup.exe"
-
-    if [ -f "$installer_path" ] && [ -s "$installer_path" ]; then
-        print_info "OpenIV installer already downloaded"
-        echo "$installer_path"
+    # Already deployed?
+    if [ -x "$WINE_BINARY" ]; then
+        local ver
+        ver=$("$WINE_BINARY" --version 2>/dev/null || echo "unknown")
+        log_ok "Portable Wine $ver found at $WINE_DIR"
         return 0
     fi
 
-    print_info "OpenIV is the ultimate modding tool for GTA V, GTA IV, and Max Payne 3."
-    echo ""
+    # Bundled inside AppImage?
+    local bundled="$APPDIR/$WINE_TARBALL"
+    if [ -f "$bundled" ]; then
+        log_step "Extracting bundled Wine from AppImage ..."
+        tar -xJf "$bundled" -C "$RUNTIME_DIR" 2>/dev/null || {
+            log_err "Failed to extract bundled Wine tarball"
+            exit 2
+        }
+    else
+        # Download from Kron4ek
+        local tarball_path="$WINE_CACHE_DIR/$WINE_TARBALL"
+        if [ ! -f "$tarball_path" ]; then
+            silent_download "$WINE_URL" "$tarball_path" "Wine ${WINE_VERSION} (${WINE_FLAVOR})"
+        else
+            log_ok "Wine tarball already cached"
+        fi
+        log_step "Extracting Wine (this may take a moment) ..."
+        tar -xJf "$tarball_path" -C "$RUNTIME_DIR" 2>/dev/null || {
+            log_err "Failed to extract Wine tarball (corrupt download?); remove $tarball_path and retry"
+            exit 2
+        }
+    fi
 
-    while true; do
-        echo -e "  ${GREEN}1.${NC} Download OpenIV installer from official website (recommended)"
-        echo -e "  ${GREEN}2.${NC} Provide your own OpenIV installer file"
-        echo ""
-        echo -n -e "${BOLD}Select an option (1 or 2): ${NC}"
-        read -r choice
-        echo ""
+    if [ ! -x "$WINE_BINARY" ]; then
+        log_err "Wine binary not found after extraction at $WINE_BINARY"
+        exit 2
+    fi
 
-        case $choice in
-            1)
-                print_step "Downloading OpenIV installer from openiv.com..."
-                print_info "URL: https://openiv.com/webiv/guest.php?get=0"
-                echo ""
-
-                if wget --progress=bar:force:noscroll "https://openiv.com/webiv/guest.php?get=0" -O "$installer_path" 2>/dev/null; then
-                    if [ -s "$installer_path" ]; then
-                        print_success "OpenIV installer downloaded successfully!"
-                        echo "$installer_path"
-                        return 0
-                    fi
-                fi
-
-                if command -v curl &> /dev/null; then
-                    if curl -# -L "https://openiv.com/webiv/guest.php?get=0" -o "$installer_path"; then
-                        if [ -s "$installer_path" ]; then
-                            print_success "OpenIV installer downloaded successfully!"
-                            echo "$installer_path"
-                            return 0
-                        fi
-                    fi
-                fi
-
-                print_error "Automatic download failed. The file may be behind a redirect."
-                print_info "Please download manually from: https://openiv.com/"
-                echo ""
-                ;;
-            2)
-                print_step "Please provide the path to your OpenIV installer (.exe):"
-                echo -n -e "${BOLD}Path: ${NC}"
-                read -r user_path
-                user_path=$(echo "$user_path" | tr -d '"' | xargs)
-
-                if [ -f "$user_path" ] && [ -r "$user_path" ]; then
-                    cp "$user_path" "$installer_path"
-                    print_success "Installer copied to $installer_path"
-                    echo "$installer_path"
-                    return 0
-                else
-                    print_error "File not found or not readable: $user_path"
-                    echo ""
-                    continue
-                fi
-                ;;
-            *)
-                print_error "Invalid option. Please select 1 or 2."
-                echo ""
-                ;;
-        esac
-    done
+    local ver
+    ver=$("$WINE_BINARY" --version 2>/dev/null || echo "unknown")
+    log_ok "Portable Wine $ver ready at $WINE_DIR"
 }
 
-install_openiv() {
-    local installer_path=$1
-    print_header "OpenIV Installation"
+# ──────────────────────────────────────────────────────────────────────────────
+# 3.  Winetricks  (download if system copy missing)
+# ──────────────────────────────────────────────────────────────────────────────
+ensure_winetricks() {
+    log_header "Winetricks"
 
-    export WINEPREFIX="$OPENIV_PREFIX"
+    # Prefer system winetricks if available and recent enough
+    if command -v winetricks >/dev/null 2>&1; then
+        local sys_ver
+        sys_ver=$(winetricks --version 2>/dev/null | head -1 || echo "0")
+        log_ok "Using system winetricks ($sys_ver)"
+        WINETRICKS_BIN="$(command -v winetricks)"
+        return 0
+    fi
 
-    print_step "Running OpenIV installer in Wine..."
-    print_info "Follow the installer wizard to complete installation."
-    print_info "Default installation path is recommended."
-    echo ""
+    if [ -x "$WINETRICKS_BIN" ]; then
+        log_ok "Local winetricks found at $WINETRICKS_BIN"
+        return 0
+    fi
 
-    wine "$installer_path"
-
-    echo ""
-    print_success "OpenIV installation process completed"
+    silent_download "$WINETRICKS_URL" "$WINETRICKS_BIN" "winetricks"
+    chmod +x "$WINETRICKS_BIN"
+    log_ok "Local winetricks ready"
 }
 
-verify_installation() {
-    print_header "Installation Verification"
+# ──────────────────────────────────────────────────────────────────────────────
+# 4.  Wine Prefix  (silent, no dialogs)
+# ──────────────────────────────────────────────────────────────────────────────
+create_wine_prefix() {
+    log_header "Wine Prefix"
 
-    export WINEPREFIX="$OPENIV_PREFIX"
+    # Kill leftover processes
+    WINEPREFIX="$PREFIX_DIR" "$WINE_SERVER" -k 2>/dev/null || true
 
-    local found_exe=""
-    local search_paths=(
-        "$OPENIV_PREFIX/drive_c/Program Files/OpenIV/OpenIV.exe"
-        "$OPENIV_PREFIX/drive_c/Program Files (x86)/OpenIV/OpenIV.exe"
-        "$OPENIV_PREFIX/drive_c/Program Files/OpenIV/OpenIV Launcher.exe"
-        "$OPENIV_PREFIX/drive_c/Program Files (x86)/OpenIV/OpenIV Launcher.exe"
+    export WINEPREFIX="$PREFIX_DIR"
+    export WINEARCH="win64"
+    export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+    export WINEDEBUG="${WINEDEBUG:--all}"
+    PATH="$WINE_DIR/bin:$PATH"
+
+    log_step "Initialising Wine prefix ..."
+    "$WINEBOOT" -u 2>/dev/null || {
+        log_err "wineboot failed — cannot create Wine prefix"
+        exit 3
+    }
+
+    if [ ! -d "$PREFIX_DIR/drive_c" ]; then
+        log_err "Wine prefix directory not created"
+        exit 3
+    fi
+    log_ok "Prefix created at $PREFIX_DIR"
+
+    # Prevent Mono/Gecko GUI prompts
+    mkdir -p "$PREFIX_DIR/drive_c/windows/system32"
+
+    # Set Windows 10
+    log_step "Setting Windows version to 10 ..."
+    "$WINETRICKS_BIN" -q win10 2>/dev/null || log_warn "win10 verb had non-zero exit"
+    log_ok "Windows 10 set"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 5.  .NET 4.8 + VC++ + D3D via winetricks  (unattended, may take 10-20 min)
+# ──────────────────────────────────────────────────────────────────────────────
+install_prefix_deps() {
+    log_header "Wine Prefix Dependencies"
+
+    export WINEPREFIX="$PREFIX_DIR"
+    export WINEARCH="win64"
+    export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+    export WINEDEBUG="${WINEDEBUG:--all}"
+    PATH="$WINE_DIR/bin:$PATH"
+    WINETRICKS_DOWNLOADER="${WINETRICKS_DOWNLOADER:-curl}"
+
+    log_step "Installing .NET Framework 4.8 (10-20 min) ..."
+    "$WINETRICKS_BIN" -q dotnet48 2>/dev/null || log_warn "dotnet48 exit code non-zero (may be benign)"
+
+    log_step "Installing Visual C++ 2019 redistributable ..."
+    "$WINETRICKS_BIN" -q vcrun2019 2>/dev/null || log_warn "vcrun2019 exit code non-zero"
+
+    log_step "Installing DirectX 11.43 runtime ..."
+    "$WINETRICKS_BIN" -q d3dx11_43 2>/dev/null || log_warn "d3dx11_43 exit code non-zero"
+
+    log_step "Installing corefonts ..."
+    "$WINETRICKS_BIN" -q corefonts 2>/dev/null || log_warn "corefonts exit code non-zero"
+
+    # Kill wine processes so subsequent steps start fresh
+    "$WINE_SERVER" -k 2>/dev/null || true
+    log_ok "Prefix dependencies installed"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 6.  OpenIV Installer Download  (silent, no prompt)
+# ──────────────────────────────────────────────────────────────────────────────
+download_openiv_installer() {
+    log_header "OpenIV Installer"
+
+    if [ -f "$OPENIV_INSTALLER" ] && [ -s "$OPENIV_INSTALLER" ]; then
+        log_ok "Installer already present ($(du -h "$OPENIV_INSTALLER" | cut -f1))"
+        return 0
+    fi
+
+    silent_download "$OPENIV_INSTALLER_URL" "$OPENIV_INSTALLER" "OpenIV installer from openiv.com"
+
+    if [ ! -s "$OPENIV_INSTALLER" ]; then
+        log_err "Downloaded file is empty"
+        exit 4
+    fi
+    log_ok "Installer saved ($(du -h "$OPENIV_INSTALLER" | cut -f1))"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 7.  OpenIV Silent Install
+# ──────────────────────────────────────────────────────────────────────────────
+install_openiv_silent() {
+    log_header "Installing OpenIV"
+
+    export WINEPREFIX="$PREFIX_DIR"
+    export WINEARCH="win64"
+    export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+    export WINEDEBUG="${WINEDEBUG:--all}"
+    PATH="$WINE_DIR/bin:$PATH"
+
+    log_step "Running installer (InnoSetup /VERYSILENT) ..."
+    "$WINE_BINARY" "$OPENIV_INSTALLER" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- 2>/dev/null || \
+        log_warn "Installer exit code non-zero — check $PREFIX_DIR/drive_c/Program Files/OpenIV/ manually"
+
+    "$WINE_SERVER" -k 2>/dev/null || true
+    log_ok "Installation phase complete"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 8.  GTA V Auto-Detection  →  symlink to C:\GTA5
+# ──────────────────────────────────────────────────────────────────────────────
+detect_gta_v() {
+    log_header "GTA V Detection"
+
+    local gta5_dir=""
+    local candidates=(
+        "$HOME/.steam/steam/steamapps/common/Grand Theft Auto V"
+        "$HOME/.local/share/Steam/steamapps/common/Grand Theft Auto V"
+        "$HOME/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps/common/Grand Theft Auto V"
+        "$HOME/Games/Heroic/GrandTheftAutoV"
+        "$HOME/Games/grand-theft-auto-v"
+        "$HOME/Games/Grand Theft Auto V"
     )
 
-    for path in "${search_paths[@]}"; do
-        if [ -f "$path" ]; then
-            found_exe="$path"
+    for c in "${candidates[@]}"; do
+        if [ -d "$c" ] && [ -f "$c/GTA5.exe" -o -f "$c/PlayGTAV.exe" ]; then
+            gta5_dir="$c"
             break
         fi
     done
 
-    if [ -z "$found_exe" ]; then
-        print_warning "OpenIV executable not found at standard locations."
-        print_info "Searching for OpenIV executable in prefix..."
-        found_exe=$(find "$OPENIV_PREFIX/drive_c" -name "OpenIV*.exe" -type f 2>/dev/null | head -1)
+    # Search a broader range of Steam library folders via libraryfolders.vdf
+    if [ -z "$gta5_dir" ]; then
+        local vdf
+        for vdf in "$HOME/.steam/steam/steamapps/libraryfolders.vdf" \
+                    "$HOME/.local/share/Steam/steamapps/libraryfolders.vdf"; do
+            if [ -f "$vdf" ]; then
+                while IFS= read -r path; do
+                    path="${path%\"}"; path="${path#\"}"
+                    local candidate="$path/steamapps/common/Grand Theft Auto V"
+                    if [ -d "$candidate" ] && [ -f "$candidate/GTA5.exe" ]; then
+                        gta5_dir="$candidate"
+                        break 2
+                    fi
+                done < <(grep -oP '"\d+"\s+"\K[^"]+' "$vdf" 2>/dev/null || true)
+            fi
+        done
     fi
 
-    if [ -n "$found_exe" ]; then
-        print_success "OpenIV found at: $found_exe"
-        OPENIV_EXE="$found_exe"
+    if [ -z "$gta5_dir" ]; then
+        log_warn "GTA V installation not found on any known path (Steam/Heroic/Lutris)."
+        log_warn "To use OpenIV with GTA V, symlink your game folder manually:"
+        log_warn "  ln -s /path/to/GTA\\ V \"$PREFIX_DIR/drive_c/GTA5\""
         return 0
-    else
-        print_warning "OpenIV executable not found."
-        print_info "You can manually specify the path to OpenIV.exe later."
-        return 1
     fi
+
+    local symlink_target="$PREFIX_DIR/drive_c/GTA5"
+    if [ -L "$symlink_target" ] || [ -d "$symlink_target" ]; then
+        log_ok "GTA V already linked at C:\\GTA5"
+        return 0
+    fi
+
+    ln -sf "$gta5_dir" "$symlink_target"
+    log_ok "GTA V found at: $gta5_dir"
+    log_ok "Symlinked to C:\\GTA5"
 }
 
-create_desktop_entry() {
-    local exe_path=$1
-    print_header "Desktop Integration"
+# ──────────────────────────────────────────────────────────────────────────────
+# 9.  Verification
+# ──────────────────────────────────────────────────────────────────────────────
+verify_installation() {
+    log_header "Verification"
 
-    export WINEPREFIX="$OPENIV_PREFIX"
+    export WINEPREFIX="$PREFIX_DIR"
 
-    local desktop_dir="$HOME/.local/share/applications"
-    local icons_dir="$HOME/.local/share/icons"
+    local paths=(
+        "$PREFIX_DIR/drive_c/Program Files/OpenIV/OpenIV.exe"
+        "$PREFIX_DIR/drive_c/Program Files (x86)/OpenIV/OpenIV.exe"
+        "$PREFIX_DIR/drive_c/Program Files/OpenIV/OpenIV Launcher.exe"
+        "$PREFIX_DIR/drive_c/Program Files (x86)/OpenIV/OpenIV Launcher.exe"
+    )
+
+    for p in "${paths[@]}"; do
+        if [ -f "$p" ]; then
+            OPENIV_EXE="$p"
+            log_ok "OpenIV executable found: $p"
+            return 0
+        fi
+    done
+
+    # Broader search
+    local found
+    found=$(find "$PREFIX_DIR/drive_c" -maxdepth 4 -name "OpenIV*.exe" -type f 2>/dev/null | head -1 || true)
+    if [ -n "$found" ]; then
+        OPENIV_EXE="$found"
+        log_ok "OpenIV executable found: $found"
+        return 0
+    fi
+
+    log_warn "OpenIV executable not found after installation."
+    return 1
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 10. Launcher Script & Desktop Entry  (point to portable Wine)
+# ──────────────────────────────────────────────────────────────────────────────
+create_launchers() {
+    log_header "Desktop Integration"
+
+    local desktop_dir="${XDG_DATA_HOME}/applications"
+    local icons_dir="${XDG_DATA_HOME}/icons"
     mkdir -p "$desktop_dir" "$icons_dir"
 
     local icon_path="$icons_dir/openiv.png"
     local desktop_file="$desktop_dir/openiv.desktop"
+    local wrapper_script="$DATA_DIR/run-openiv.sh"
 
-    local script_dir
-    local wrapper_script="$OPENIV_DIR/run-openiv.sh"
+    # Bundle icon from AppImage if available, otherwise embed minimal PNG
+    if [ -f "$APPDIR/openiv.png" ]; then
+        cp "$APPDIR/openiv.png" "$icon_path"
+    elif [ ! -f "$icon_path" ]; then
+        # Tiny valid 1x1 PNG placeholder
+        printf '\211PNG\r\n\032\n\000\000\000\rIHDR\000\000\000\001\000\000\000\001\010\002\000\000\000\220wS\336\000\000\000\022IDATx\234c\370\017\000\000\001\001\001\002\370\217\374\351\000\000\000\000IEND\246B`\202' > "$icon_path"
+    fi
 
-    cat > "$wrapper_script" << 'WRAPEOF'
+    # Wrapper — sources the portable Wine environment
+    cat > "$wrapper_script" << WRAPEOF
 #!/bin/bash
-export WINEPREFIX="$HOME/.OpenIV/prefix"
-export WINEDEBUG="-all"
+# OpenIV launcher — generated by OpenIVLinuxInstaller
+export WINEPREFIX="$PREFIX_DIR"
+export WINEARCH="win64"
+export WINEDEBUG="${WINEDEBUG:--all}"
+export PATH="$WINE_DIR/bin:\$PATH"
 
-if command -v gamescope &> /dev/null; then
-    gamescope -f -- wine "$HOME/.OpenIV/prefix/drive_c/Program Files/OpenIV/OpenIV.exe" 2>/dev/null || \
-    gamescope -f -- wine "$HOME/.OpenIV/prefix/drive_c/Program Files (x86)/OpenIV/OpenIV.exe" 2>/dev/null || \
-    gamescope -f -- wine "$HOME/.OpenIV/prefix/drive_c/Program Files/OpenIV/OpenIV Launcher.exe" 2>/dev/null || \
-    gamescope -f -- wine "$HOME/.OpenIV/prefix/drive_c/Program Files (x86)/OpenIV/OpenIV Launcher.exe" 2>/dev/null
+# Gamescope wrapper (if available)
+if command -v gamescope >/dev/null 2>&1; then
+    exec gamescope -f -- "$WINE_BINARY" "\$@"
 else
-    wine "$HOME/.OpenIV/prefix/drive_c/Program Files/OpenIV/OpenIV.exe" 2>/dev/null || \
-    wine "$HOME/.OpenIV/prefix/drive_c/Program Files (x86)/OpenIV/OpenIV.exe" 2>/dev/null || \
-    wine "$HOME/.OpenIV/prefix/drive_c/Program Files/OpenIV/OpenIV Launcher.exe" 2>/dev/null || \
-    wine "$HOME/.OpenIV/prefix/drive_c/Program Files (x86)/OpenIV/OpenIV Launcher.exe" 2>/dev/null
+    exec "$WINE_BINARY" "\$@"
 fi
 WRAPEOF
     chmod +x "$wrapper_script"
@@ -369,7 +414,7 @@ WRAPEOF
 [Desktop Entry]
 Name=OpenIV
 Comment=The ultimate modding tool for GTA V, GTA IV and Max Payne 3
-Exec=$wrapper_script
+Exec=$wrapper_script "$OPENIV_EXE"
 Icon=$icon_path
 Terminal=false
 Type=Application
@@ -377,181 +422,100 @@ Categories=Game;Utility;
 StartupWMClass=openiv.exe
 StartupNotify=true
 DESKTOPEOF
-    print_success "Desktop entry created at $desktop_file"
 
-    print_info "You can now launch OpenIV from your application menu."
+    log_ok "Desktop entry: $desktop_file"
+    log_ok "Launcher script: $wrapper_script"
+
+    # Shell alias
+    local shell_rc=""
+    if [ -f "$HOME/.bashrc" ]; then shell_rc="$HOME/.bashrc"; fi
+    if [ -f "$HOME/.zshrc" ] && [ -z "$shell_rc" ]; then shell_rc="$HOME/.zshrc"; fi
+    if [ -n "$shell_rc" ] && ! grep -q "alias openiv=" "$shell_rc" 2>/dev/null; then
+        {
+            echo ""
+            echo "# OpenIV launcher (portable Wine)"
+            echo "alias openiv='$wrapper_script \"$OPENIV_EXE\"'"
+        } >> "$shell_rc"
+        log_ok "Added 'openiv' alias to $shell_rc"
+    fi
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 11. Summary & Launch
+# ──────────────────────────────────────────────────────────────────────────────
+print_summary() {
+    echo ""
+    log_header "Installation Complete"
+    echo ""
+    echo -e "  ${GREEN}OpenIV has been installed and configured.${NC}"
+    echo ""
+    echo -e "  ${BOLD}Launch methods:${NC}"
+    echo -e "    ${GREEN}1.${NC} Terminal: ${CYAN}openiv${NC}"
+    echo -e "    ${GREEN}2.${NC} Application menu: ${CYAN}OpenIV${NC}"
+    echo -e "    ${GREEN}3.${NC} Direct: ${CYAN}WINEPREFIX=\"$PREFIX_DIR\" \"$WINE_BINARY\" \"$OPENIV_EXE\"${NC}"
+    echo ""
+    echo -e "  ${BOLD}Uninstall:${NC}  ${CYAN}rm -rf \"$DATA_DIR\"${NC}"
+    echo -e "  ${BOLD}Wine dir:${NC}   ${CYAN}$WINE_DIR${NC}"
+    echo -e "  ${BOLD}Prefix:${NC}     ${CYAN}$PREFIX_DIR${NC}"
     echo ""
 }
 
 launch_openiv() {
-    print_header "Launch OpenIV"
-
-    export WINEPREFIX="$OPENIV_PREFIX"
-
-    echo -e "${GREEN}OpenIV is ready to launch!${NC}"
-    echo ""
-    echo -e "  ${BOLD}Options:${NC}"
-    echo -e "  ${GREEN}1.${NC} Launch OpenIV now"
-    echo -e "  ${GREEN}2.${NC} Exit (you can run '${CYAN}openiv${NC}' later from terminal)"
-    echo ""
-    echo -n -e "${BOLD}Select an option (1 or 2): ${NC}"
-    read -r launch_choice
-
-    case $launch_choice in
-        1)
-            print_step "Launching OpenIV..."
-            echo ""
-
-            local try_paths=(
-                "$OPENIV_PREFIX/drive_c/Program Files/OpenIV/OpenIV.exe"
-                "$OPENIV_PREFIX/drive_c/Program Files (x86)/OpenIV/OpenIV.exe"
-                "$OPENIV_PREFIX/drive_c/Program Files/OpenIV/OpenIV Launcher.exe"
-                "$OPENIV_PREFIX/drive_c/Program Files (x86)/OpenIV/OpenIV Launcher.exe"
-            )
-
-            local launched=false
-            for exe in "${try_paths[@]}"; do
-                if [ -f "$exe" ]; then
-                    print_info "Starting: $exe"
-                    wine "$exe"
-                    launched=true
-                    break
-                fi
-            done
-
-            if [ "$launched" = false ]; then
-                print_error "Could not find OpenIV executable to launch."
-                print_info "Try running manually: wine /path/to/OpenIV.exe"
-            fi
-            ;;
-        2)
-            print_info "Exiting. To launch OpenIV later:"
-            echo ""
-            echo -e "  ${CYAN}export WINEPREFIX=\"$OPENIV_PREFIX\"${NC}"
-            echo -e "  ${CYAN}wine \"$OPENIV_PREFIX/drive_c/Program Files/OpenIV/OpenIV.exe\"${NC}"
-            echo ""
-            print_info "Or use the desktop shortcut that was created."
-            ;;
-    esac
-}
-
-install_shell_command() {
-    local wrapper_script="$OPENIV_DIR/run-openiv.sh"
-
-    if [ -f "$wrapper_script" ]; then
-        local bashrc="$HOME/.bashrc"
-        local zshrc="$HOME/.zshrc"
-        local profile_files=("$bashrc" "$zshrc")
-
-        for rc in "${profile_files[@]}"; do
-            if [ -f "$rc" ]; then
-                if ! grep -q "alias openiv=" "$rc" 2>/dev/null; then
-                    echo "" >> "$rc"
-                    echo "# OpenIV alias" >> "$rc"
-                    echo "alias openiv='$wrapper_script'" >> "$rc"
-                    print_info "Added 'openiv' alias to $rc"
-                fi
-            fi
-        done
-
-        echo ""
-        print_success "You can now run '${CYAN}openiv${NC}' from terminal!"
-        print_info "Or launch OpenIV from your application menu."
+    if [ -z "$OPENIV_EXE" ] || [ ! -f "$OPENIV_EXE" ]; then
+        log_warn "OpenIV executable unavailable — skipping launch."
+        return
     fi
+
+    echo ""
+    log_header "Launching OpenIV"
+    echo ""
+
+    export WINEPREFIX="$PREFIX_DIR"
+    export WINEARCH="win64"
+    export WINEDEBUG="${WINEDEBUG:--all}"
+    PATH="$WINE_DIR/bin:$PATH"
+
+    exec "$WINE_BINARY" "$OPENIV_EXE"
 }
 
-print_banner() {
-    clear
+# ──────────────────────────────────────────────────────────────────────────────
+# Main  (idempotent: safe to re-run)
+# ──────────────────────────────────────────────────────────────────────────────
+main() {
     echo ""
     echo -e "${CYAN}  ╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}  ║${NC}                                                              ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}           ${BOLD}OpenIV Linux Installer${NC}                        ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}                                                              ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}  ${GREEN}Run OpenIV on Linux with Wine${NC}                          ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}  Automatic setup - no manual Wine configuration needed${NC}       ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}                                                              ${CYAN}║${NC}"
+    echo -e "${CYAN}  ║${NC}          ${BOLD}OpenIV Linux Installer  (zero-input edition)${NC}       ${CYAN}║${NC}"
     echo -e "${CYAN}  ╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
-}
 
-print_summary() {
-    print_header "Installation Complete"
+    setup_directories
+    ensure_portable_wine
+    ensure_winetricks
 
-    echo -e "${GREEN}${BOLD}OpenIV has been successfully installed on your system!${NC}"
-    echo ""
-    echo -e "${BOLD}Key Information:${NC}"
-    echo -e "  ${GREEN}•${NC} Wine Prefix: ${CYAN}$OPENIV_PREFIX${NC}"
-    echo -e "  ${GREEN}•${NC} OpenIV Location: ${CYAN}$OPENIV_PREFIX/drive_c/Program Files/OpenIV/${NC}"
-    echo ""
-    echo -e "${BOLD}How to Launch:${NC}"
-    echo -e "  ${GREEN}1.${NC} Type ${CYAN}openiv${NC} in your terminal"
-    echo -e "  ${GREEN}2.${NC} Find OpenIV in your application menu"
-    echo -e "  ${GREEN}3.${NC} Run: ${CYAN}WINEPREFIX=\"$OPENIV_PREFIX\" wine \"$OPENIV_PREFIX/drive_c/Program Files/OpenIV/OpenIV.exe\"${NC}"
-    echo ""
-    echo -e "${BOLD}Notes:${NC}"
-    echo -e "  ${YELLOW}•${NC} First launch may be slower as Wine finalizes setup"
-    echo -e "  ${YELLOW}•${NC} To uninstall, delete: ${CYAN}rm -rf $OPENIV_DIR${NC}"
-    echo ""
-}
-
-main() {
-    print_banner
-
-    detect_distro
-    print_info "Detected distribution: $DISTRO $VERSION"
-    echo ""
-
-    check_dependencies
-
-    if [ -d "$OPENIV_PREFIX/drive_c" ] && [ -f "$OPENIV_PREFIX/drive_c/windows/system32/kernel32.dll" ]; then
-        print_info "Wine prefix already exists at $OPENIV_PREFIX"
-        echo ""
-        echo -e "  ${GREEN}1.${NC} Use existing prefix and check for OpenIV"
-        echo -e "  ${GREEN}2.${NC} Recreate Wine prefix (clean install)"
-        echo ""
-        echo -n -e "${BOLD}Select an option (1 or 2): ${NC}"
-        read -r prefix_choice
-
-        if [ "$prefix_choice" = "2" ]; then
-            print_warning "Removing existing Wine prefix..."
-            rm -rf "$OPENIV_PREFIX"
-            setup_wine_prefix
-        fi
+    # Create prefix if missing
+    if [ ! -f "$PREFIX_DIR/drive_c/windows/system32/kernel32.dll" ]; then
+        create_wine_prefix
+        install_prefix_deps
     else
-        setup_wine_prefix
+        log_ok "Existing Wine prefix at $PREFIX_DIR — skipping recreation"
     fi
 
-    installer_path=$(download_openiv)
+    # OpenIV installer
+    download_openiv_installer
+    install_openiv_silent
 
-    if [ -n "$installer_path" ] && [ -f "$installer_path" ]; then
-        install_openiv "$installer_path"
-    fi
+    # GTA V auto-link
+    detect_gta_v
 
+    # Verify & finalise
     if verify_installation; then
-        create_desktop_entry "$OPENIV_EXE"
-        install_shell_command
+        create_launchers
         print_summary
         launch_openiv
     else
-        print_warning "Installation may not be complete."
-        echo ""
-        echo -e "  ${GREEN}1.${NC} Try to launch anyway"
-        echo -e "  ${GREEN}2.${NC} Exit"
-        echo ""
-        echo -n -e "${BOLD}Select: ${NC}"
-        read -r retry_choice
-
-        if [ "$retry_choice" = "1" ]; then
-            print_step "Searching for OpenIV executable..."
-            local found=$(find "$OPENIV_PREFIX/drive_c" -name "*.exe" -type f 2>/dev/null | grep -i openiv | head -1)
-            if [ -n "$found" ]; then
-                print_success "Found: $found"
-                create_desktop_entry "$found"
-                install_shell_command
-                print_summary
-            fi
-            launch_openiv
-        fi
+        log_warn "OpenIV executable not found. Installer may have failed silently."
+        log_warn "Check $PREFIX_DIR/drive_c/Program Files/OpenIV/ manually."
+        exit 5
     fi
 }
 
