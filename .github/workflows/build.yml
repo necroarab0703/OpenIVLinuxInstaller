@@ -15,12 +15,15 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget curl fuse libfuse2 desktop-file-utils
+          sudo apt-get install -y wget curl desktop-file-utils libgdk-pixbuf2.0-dev
 
       - name: Download appimagetool
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
           chmod +x /tmp/appimagetool
+          cd /tmp
+          ./appimagetool --appimage-extract 2>/dev/null || true
+          echo "appimagetool ready"
 
       - name: Setup AppDir
         run: |
@@ -33,7 +36,8 @@ jobs:
 
       - name: Build AppImage
         run: |
-          ARCH=x86_64 /tmp/appimagetool Build/AppDir OpenIV-x86_64.AppImage
+          ARCH=x86_64 /tmp/squashfs-root/AppRun Build/AppDir OpenIV-x86_64.AppImage || \
+          ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run Build/AppDir OpenIV-x86_64.AppImage
 
       - name: Create Release
         uses: softprops/action-gh-release@v1

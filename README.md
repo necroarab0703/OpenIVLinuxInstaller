@@ -18,7 +18,7 @@ chmod +x OpenIVLinuxInstaller.sh
 
 ### Option 3: One-liner
 ```bash
-curl -sSL https://raw.githubusercontent.com/USER/OpenIVLinuxInstaller/main/OpenIVScripts/OpenIVLinuxInstaller.sh | bash
+curl -sSL https://raw.githubusercontent.com/necroarab0703/OpenIVLinuxInstaller/main/OpenIVScripts/OpenIVLinuxInstaller.sh | bash
 ```
 
 ## What It Does
