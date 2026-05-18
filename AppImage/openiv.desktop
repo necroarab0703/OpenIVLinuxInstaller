@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OpenIV
+Comment=The ultimate modding tool for GTA V, GTA IV and Max Payne 3
+Exec=openiv
+Icon=openiv
+Terminal=false
+Type=Application
+Categories=Game;Utility;
+StartupWMClass=openiv.exe
+StartupNotify=true

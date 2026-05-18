@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.AppImage
+Build/
+.DS_Store
+Thumbs.db
