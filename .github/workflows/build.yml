@@ -45,8 +45,8 @@ jobs:
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           
-          # Download OpenIVSetup.exe directly into the layout folder
-          curl -L "https://web.archive.org/web/20210720182410if_/http://openiv.com/files/OpenIVSetup.exe" -o "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
+          # Copy OpenIVSetup.exe from repository root into the layout folder
+          cp "$GITHUB_WORKSPACE/OpenIVSetup.exe" "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
           
           # Pack the cloud-built prefix into the distribution asset tree
           cd "$GITHUB_WORKSPACE/prebaked_prefix" && tar -cJf "$GITHUB_WORKSPACE/$APP_DIR/usr/share/openiv/prefix-core.tar.xz" .
