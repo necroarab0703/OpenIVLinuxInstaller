@@ -11,13 +11,16 @@ XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 DATA_DIR="$XDG_DATA_HOME/openiv-linux"
 PREFIX_DIR="$DATA_DIR/prefix"
 LAUNCHER_SCRIPT="$DATA_DIR/openiv.sh"
+BIN_DIR="$DATA_DIR/bin"
 DOWNLOADED_INSTALLER="$DATA_DIR/OpenIVSetup.exe"
 OPENIV_MIRROR_URL="https://media.gta5-mods.com/tools/openiv/OpenIVSetup.exe"
 
 BUNDLED_WINE="$APPDIR/usr/share/openiv/wine"
-BUNDLED_PREFIX_TARBALL="$APPDIR/usr/share/openiv/prefix.tar.xz"
 WINE_BINARY="$BUNDLED_WINE/bin/wine"
 WINE_SERVER="$BUNDLED_WINE/bin/wineserver"
+
+WINETRICKS_URL="https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks"
+WINETRICKS_BIN="$BIN_DIR/winetricks"
 
 OPENIV_EXE=""
 
@@ -34,6 +37,34 @@ log_ok()     { echo -e "  ${GREEN}✓${NC} $*"; }
 log_warn()   { echo -e "  ${YELLOW}⚠${NC} $*"; }
 log_err()    { echo -e "  ${RED}✗${NC} $*" >&2; }
 
+ensure_winetricks() {
+    if command -v winetricks >/dev/null 2>&1; then
+        WINETRICKS_BIN="$(command -v winetricks)"
+        return 0
+    fi
+    if [ -x "$WINETRICKS_BIN" ]; then
+        return 0
+    fi
+    log_step "Downloading winetricks …"
+    mkdir -p "$BIN_DIR"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "$WINETRICKS_URL" -o "$WINETRICKS_BIN" 2>/dev/null || {
+            log_err "Failed to download winetricks"
+            exit 2
+        }
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q "$WINETRICKS_URL" -O "$WINETRICKS_BIN" 2>/dev/null || {
+            log_err "Failed to download winetricks"
+            exit 2
+        }
+    else
+        log_err "Neither curl nor wget found — cannot download winetricks"
+        exit 2
+    fi
+    chmod +x "$WINETRICKS_BIN"
+    log_ok "winetricks ready"
+}
+
 ensure_prefix() {
     log_header "Wine Prefix"
 
@@ -42,26 +73,38 @@ ensure_prefix() {
         return 0
     fi
 
-    if [ -z "$APPDIR" ] || [ ! -f "$BUNDLED_PREFIX_TARBALL" ]; then
-        log_err "Pre-baked prefix tarball not found at $BUNDLED_PREFIX_TARBALL"
-        log_err "OpenIV Linux Installer must run from within the AppImage."
-        exit 1
-    fi
+    export WINEPREFIX="$PREFIX_DIR"
+    export WINEARCH="win32"
+    export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+    export WINEDEBUG="${WINEDEBUG:--all}"
 
-    log_step "Extracting pre-baked prefix …"
+    "$WINE_SERVER" -k 2>/dev/null || true
+
+    log_step "Initialising Wine prefix (win32) …"
     mkdir -p "$PREFIX_DIR"
-    tar -xJf "$BUNDLED_PREFIX_TARBALL" -C "$PREFIX_DIR" 2>/dev/null || {
-        log_err "Prefix tarball extraction failed"
-        exit 3
-    }
+    "$WINE_BINARY" wineboot -u 2>/dev/null || { log_err "wineboot failed"; exit 3; }
+    if [ ! -d "$PREFIX_DIR/drive_c" ]; then log_err "drive_c not created"; exit 3; fi
+    log_ok "Prefix created"
 
-    if [ -f "$PREFIX_DIR/drive_c/windows/system32/kernel32.dll" ]; then
-        log_ok "Prefix extracted ($(du -sh "$PREFIX_DIR" | cut -f1))"
-    else
-        log_err "Prefix tarball produced an incomplete prefix"
-        rm -rf "$PREFIX_DIR"
-        exit 3
-    fi
+    ensure_winetricks
+
+    log_step "Setting Windows 10 …"
+    "$WINETRICKS_BIN" -q win10 2>/dev/null || log_warn "win10 exit non-zero"
+
+    log_step "Installing .NET Framework 4.8 (this may take 10-20 minutes) …"
+    "$WINETRICKS_BIN" -q dotnet48 2>/dev/null || log_warn "dotnet48 exit non-zero (may be benign)"
+
+    log_step "Installing VC++ 2019 …"
+    "$WINETRICKS_BIN" -q vcrun2019 2>/dev/null || log_warn "vcrun2019 exit non-zero"
+
+    log_step "Installing DirectX 11.43 …"
+    "$WINETRICKS_BIN" -q d3dx11_43 2>/dev/null || log_warn "d3dx11_43 exit non-zero"
+
+    log_step "Installing corefonts …"
+    "$WINETRICKS_BIN" -q corefonts 2>/dev/null || log_warn "corefonts exit non-zero"
+
+    "$WINE_SERVER" -k 2>/dev/null || true
+    log_ok "Prefix built from scratch"
 }
 
 install_openiv_silent() {
@@ -199,7 +242,7 @@ main() {
     echo ""
     echo -e "${CYAN}  ╔══════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}  ║${NC}          ${BOLD}OpenIV Linux Installer v5${NC}                        ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}          ${GREEN}[Hybrid mode – bundled Wine + runtime download]${NC}    ${CYAN}║${NC}"
+    echo -e "${CYAN}  ║${NC}          ${GREEN}[Hybrid – bundled Wine + runtime prefix build]${NC}    ${CYAN}║${NC}"
     echo -e "${CYAN}  ╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 

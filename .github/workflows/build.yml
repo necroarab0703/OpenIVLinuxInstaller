@@ -1,5 +1,4 @@
 name: Build and Release
-
 on:
   push:
     tags:
@@ -12,29 +11,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq \
-            wget curl xz-utils tar \
-            desktop-file-utils libgdk-pixbuf2.0-dev \
-            winetricks cabextract
-
-      - name: Cache prefix tarball
-        id: cache-prefix
-        uses: actions/cache@v4
-        with:
-          path: build/prefix.tar.xz
-          key: openiv-hybrid-v5-${{ hashFiles('OpenIVScripts/build-wine-prefix.sh') }}
-
-      - name: Build pre-baked prefix (if not cached)
-        if: steps.cache-prefix.outputs.cache-hit != 'true'
-        run: |
-          bash OpenIVScripts/build-wine-prefix.sh
+          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils libgdk-pixbuf2.0-dev
 
       - name: Download appimagetool
         run: |
@@ -42,64 +25,33 @@ jobs:
           chmod +x /tmp/appimagetool
           cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
 
-      - name: Setup AppDir
+      - name: Setup AppDir Structure
         run: |
           APP_DIR="build/openiv-installer.AppDir"
-          mkdir -p "$APP_DIR/usr/share/openiv/wine" \
-                   "$APP_DIR/usr/share/applications"
-
+          mkdir -p "$APP_DIR/usr/share/openiv/wine" "$APP_DIR/usr/share/applications"
+          
           cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
-
-          cp build/prefix.tar.xz "$APP_DIR/usr/share/openiv/prefix.tar.xz"
-
-          WINE_CACHE="build/cache/wine-11.9-staging-amd64-wow64.tar.xz"
-          if [ -f "$WINE_CACHE" ]; then
-            tar -xJf "$WINE_CACHE" -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
-          else
-            wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-amd64-wow64.tar.xz" \
-              -O /tmp/wine-bundle.tar.xz
-            tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
-          fi
-
+          
+          wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-amd64-wow64.tar.xz" -O /tmp/wine-bundle.tar.xz
+          tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
           chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
 
       - name: Build AppImage
         run: |
-          ARCH=x86_64 /tmp/squashfs-root/AppRun build/openiv-installer.AppDir OpenIV-x86_64.AppImage || \
           ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run build/openiv-installer.AppDir OpenIV-x86_64.AppImage
 
-      - name: Create Release
+      - name: Create Release Page
         uses: softprops/action-gh-release@v1
         with:
           name: OpenIV Linux Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer ${{ github.ref_name }}
-
-            **Hybrid model** — Wine + prefix bundled offline; OpenIVSetup.exe downloaded at runtime.
-
-            ### Downloads
-            - **AppImage**: `OpenIV-x86_64.AppImage` — self-contained with Wine + pre-baked prefix
-
-            ### AppImage — What's Bundled
-            - Portable Wine 11.9 staging (Kron4ek) — ~90 MB compressed
-            - Pre-baked Wine prefix with .NET 4.8, VC++ 2019, D3DX11.43, corefonts pre-installed
-            - OpenIVSetup.exe downloaded dynamically from gta5-mods.com mirror on first run
-            - Prefix extraction: **~3 seconds**; installer download + setup: **~30 seconds**
-
-            ### Usage
-            ```bash
-            chmod +x OpenIV-x86_64.AppImage
-            ./OpenIV-x86_64.AppImage
-            ```
-
-            ### Changelog
-            See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
-          files: |
-            OpenIV-x86_64.AppImage
-          draft: false
-          prerelease: false
+            ## OpenIV Linux Installer Hybrid Model (v5.0.2)
+            - Bundles portable Wine 11.9 staging.
+            - Dynamically builds the 32-bit compatibility prefix locally on first launch.
+            - Automatically fetches OpenIVSetup.exe from the reliable gta5-mods CDN mirror.
+          files: OpenIV-x86_64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

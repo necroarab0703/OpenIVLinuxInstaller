@@ -42,16 +42,6 @@ chmod +x "$APP_DIR/AppRun"
 cp AppImage/openiv.desktop "$APP_DIR/openiv.desktop"
 cp AppImage/openiv.png "$APP_DIR/openiv.png"
 
-# Pre-baked prefix tarball
-PREFIX_TARBALL="$BUILD_DIR/prefix.tar.xz"
-if [ ! -f "$PREFIX_TARBALL" ]; then
-    echo "==> ERROR: Pre-baked prefix tarball not found at $PREFIX_TARBALL"
-    echo "    build-wine-prefix.sh should have created it."
-    exit 1
-fi
-cp "$PREFIX_TARBALL" "$APP_DIR/usr/share/openiv/prefix.tar.xz"
-echo "    Prefix tarball: $(du -h "$APP_DIR/usr/share/openiv/prefix.tar.xz" | cut -f1)"
-
 # Portable Wine binaries
 WINE_SRC="$BUILD_DIR/prefix-builder/wine"
 if [ ! -d "$WINE_SRC" ]; then
