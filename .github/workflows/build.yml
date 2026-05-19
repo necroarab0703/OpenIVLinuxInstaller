@@ -16,49 +16,62 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          sudo dpkg --add-architecture i386
           sudo apt-get update -qq
-          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils libgdk-pixbuf2.0-dev
+          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils wine32 wine64 cabextract
 
-      - name: Download appimagetool
+      - name: Pre-bake Wine Prefix with Winetricks
         run: |
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
-          chmod +x /tmp/appimagetool
-          cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
+          export WINEARCH=win32
+          export WINEPREFIX="$GITHUB_WORKSPACE/prebaked_prefix"
+          
+          # Download and run winetricks silently in the cloud
+          wget -q https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /tmp/winetricks
+          chmod +x /tmp/winetricks
+          
+          # Install the massive runtimes on the cloud server
+          /tmp/winetricks -q dotnet48
+          /tmp/winetricks -q vcrun2019
+          /tmp/winetricks -q d3dx11_43
 
       - name: Setup AppDir Structure
         run: |
-          mkdir -p build
           APP_DIR="build/openiv-installer.AppDir"
           mkdir -p "$APP_DIR/usr/share/openiv/wine" "$APP_DIR/usr/share/applications"
           
-          # Copy installer scripts and configurations
+          # Copy scripts and prebaked prefix archive
           cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           
-          # Download official OpenIVSetup.exe directly into the internal AppImage distribution folder
-          curl -L "https://raw.githubusercontent.com/NecroArab/OpenIVLinuxInstaller/main/OpenIVSetup.exe" -o "$APP_DIR/usr/share/openiv/OpenIVSetup.exe" || \
+          # Download OpenIVSetup.exe directly into the layout folder
           curl -L "https://web.archive.org/web/20210720182410if_/http://openiv.com/files/OpenIVSetup.exe" -o "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
           
-          # Fetch Kron4ek 32-bit Wine staging environment
+          # Pack the cloud-built prefix into the distribution asset tree
+          cd "$GITHUB_WORKSPACE/prebaked_prefix" && tar -cJf "$GITHUB_WORKSPACE/$APP_DIR/usr/share/openiv/prefix-core.tar.xz" .
+          
+          # Fetch Kron4ek portable Wine execution layer
+          cd "$GITHUB_WORKSPACE"
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
           chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
 
       - name: Build AppImage
         run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
+          chmod +x /tmp/appimagetool
           ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run build/openiv-installer.AppDir OpenIV-x86_64.AppImage
 
       - name: Create Release Page
         uses: softprops/action-gh-release@v1
         with:
-          name: OpenIV Linux Installer ${{ github.ref_name }}
+          name: OpenIV Instant Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer (v5.1.4)
-            - Bundles portable Wine 11.9 staging (native x86/32-bit).
-            - Pre-bundled OpenIVSetup.exe installer core.
-            - Uses local runtime system font mapping for interface display.
+            ## OpenIV Pre-Baked Release (v5.3.0)
+            - **Instant Launch:** Runtimes (.NET 4.8, VC++ 2019, DirectX) pre-compiled in the cloud.
+            - **No Setup Waiting:** Bypasses local Winetricks generation completely.
+            - **Offline Capable:** Works without an active internet connection.
           files: OpenIV-x86_64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

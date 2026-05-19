@@ -77,18 +77,26 @@ ensure_prefix() {
         return 0
     fi
 
-    export WINEPREFIX="$PREFIX_DIR"
-    export WINEARCH="win32"
-    export WINEDLLOVERRIDES="winemenubuilder.exe=d"
-    export WINEDEBUG="${WINEDEBUG:--all}"
+    if [ -z "$APPDIR" ] || [ ! -f "$APPDIR/usr/share/openiv/prefix-core.tar.xz" ]; then
+        log_err "Pre-baked prefix tarball not found"
+        log_err "OpenIV Linux Installer must run from within the AppImage."
+        exit 1
+    fi
 
-    "$WINE_SERVER" -k 2>/dev/null || true
-
-    log_step "Initialising Wine prefix (win32) …"
+    log_step "Extracting pre-baked prefix (cloud-built, .NET 4.8 + VC++ + D3D) …"
     mkdir -p "$PREFIX_DIR"
-    "$WINE_BINARY" wineboot -u 2>/dev/null || { log_err "wineboot failed"; exit 3; }
-    if [ ! -d "$PREFIX_DIR/drive_c" ]; then log_err "drive_c not created"; exit 3; fi
-    log_ok "Prefix created"
+    tar -xJf "$APPDIR/usr/share/openiv/prefix-core.tar.xz" -C "$PREFIX_DIR" 2>/dev/null || {
+        log_err "Prefix extraction failed"
+        exit 3
+    }
+
+    if [ -f "$PREFIX_DIR/drive_c/windows/system32/kernel32.dll" ]; then
+        log_ok "Prefix extracted ($(du -sh "$PREFIX_DIR" | cut -f1))"
+    else
+        log_err "Prefix tarball produced an incomplete prefix"
+        rm -rf "$PREFIX_DIR"
+        exit 3
+    fi
 
     log_step "Injecting system interface fonts dynamically…"
     FONT_DEST="$PREFIX_DIR/drive_c/windows/Fonts"
@@ -108,26 +116,6 @@ ensure_prefix() {
             break
         fi
     done
-
-    ensure_winetricks
-
-    log_step "Setting Windows 10 …"
-    "$WINETRICKS_BIN" -q win10 2>/dev/null || log_warn "win10 exit non-zero"
-
-    log_step "Installing .NET Framework 4.8 (this may take 10-20 minutes) …"
-    "$WINETRICKS_BIN" -q dotnet48 2>/dev/null || log_warn "dotnet48 exit non-zero (may be benign)"
-
-    log_step "Installing VC++ 2019 …"
-    "$WINETRICKS_BIN" -q vcrun2019 2>/dev/null || log_warn "vcrun2019 exit non-zero"
-
-    log_step "Installing DirectX 11.43 …"
-    "$WINETRICKS_BIN" -q d3dx11_43 2>/dev/null || log_warn "d3dx11_43 exit non-zero"
-
-    log_step "Installing corefonts …"
-    "$WINETRICKS_BIN" -q corefonts 2>/dev/null || log_warn "corefonts exit non-zero"
-
-    "$WINE_SERVER" -k 2>/dev/null || true
-    log_ok "Prefix built from scratch"
 }
 
 install_openiv_silent() {
