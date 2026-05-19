@@ -1,50 +1,50 @@
 #!/bin/bash
-################################################################################
-# build-appimage.sh  –  OpenIV Linux AppImage Builder
-#
-# 1. Runs build-wine-prefix.sh to obtain a pre-baked prefix + portable Wine.
-# 2. Assembles the AppDir with both Wine binaries and the prefix tarball.
-# 3. Runs appimagetool to produce the final .AppImage.
-#
-# Usage:
-#   ./build-appimage.sh
-#
-# Environment:
-#   WINE_VERSION    – Kron4ek Wine version (default: 11.9)
-#   WINE_FLAVOR     – Kron4ek flavour      (default: staging-amd64-wow64)
-################################################################################
 set -euo pipefail
 
 APP_NAME="OpenIV"
 ARCH="x86_64"
-BUILD_DIR="$(pwd)/Build"
-APP_DIR="$BUILD_DIR/AppDir"
+BUILD_DIR="$(pwd)/build"
+APP_DIR="$BUILD_DIR/openiv-installer.AppDir"
 OUTPUT="$BUILD_DIR/${APP_NAME}-${ARCH}.AppImage"
+LOCAL_OPENIV_SETUP="/home/necroarab/Projects/OpenIV-Wine/OpenIVSetup.exe"
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║              OpenIV AppImage Builder                        ║"
+echo "║              OpenIV AppImage Builder v4                     ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 
 # ── Step 1 – Build pre-baked prefix + fetch Wine ─────────────────────────────
-echo "==> [1/4] Building pre-baked Wine prefix …"
+echo "==> [1/5] Building pre-baked Wine prefix …"
 echo "    (run build-wine-prefix.sh; this takes 10-25 minutes on first run)"
 echo ""
 
 bash OpenIVScripts/build-wine-prefix.sh
 
-# ── Step 2 – Clean + create AppDir skeleton ──────────────────────────────────
-echo "==> [2/4] Creating AppDir structure …"
+# ── Step 2 – Verify local OpenIVSetup.exe ─────────────────────────────────────
+echo "==> [2/5] Verifying local OpenIVSetup.exe …"
+
+if [ ! -f "$LOCAL_OPENIV_SETUP" ]; then
+    echo "==> ERROR: OpenIVSetup.exe not found at:"
+    echo "    $LOCAL_OPENIV_SETUP"
+    echo "    Place the official OpenIV installer at that path and retry."
+    exit 1
+fi
+
+INSTALLER_SIZE=$(du -h "$LOCAL_OPENIV_SETUP" | cut -f1)
+echo "    Found: $LOCAL_OPENIV_SETUP ($INSTALLER_SIZE)"
+
+# ── Step 3 – Clean + create AppDir skeleton ──────────────────────────────────
+echo "==> [3/5] Creating AppDir structure …"
 rm -rf "$APP_DIR" "$OUTPUT"
 
 mkdir -p "$APP_DIR/usr/share/openiv/wine"
 mkdir -p "$APP_DIR/usr/share/applications"
 
-# ── Step 3 – Populate AppDir ─────────────────────────────────────────────────
-echo "==> [3/4] Populating AppDir …"
+# ── Step 4 – Populate AppDir ─────────────────────────────────────────────────
+echo "==> [4/5] Populating AppDir …"
 
-# Runtime installer
+# Runtime installer (no longer used at runtime in v4, kept for reference)
 cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/OpenIVLinuxInstaller.sh"
 chmod +x "$APP_DIR/OpenIVLinuxInstaller.sh"
 
@@ -56,16 +56,32 @@ chmod +x "$APP_DIR/AppRun"
 cp AppImage/openiv.desktop "$APP_DIR/openiv.desktop"
 cp AppImage/openiv.png "$APP_DIR/openiv.png"
 
+# Local OpenIVSetup.exe
+cp "$LOCAL_OPENIV_SETUP" "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
+echo "    OpenIVSetup.exe: $INSTALLER_SIZE"
+
 # Pre-baked prefix tarball
-cp build/prefix-builder/../prefix.tar.xz "$APP_DIR/usr/share/openiv/prefix.tar.xz"
+PREFIX_TARBALL="$BUILD_DIR/prefix.tar.xz"
+if [ ! -f "$PREFIX_TARBALL" ]; then
+    echo "==> ERROR: Pre-baked prefix tarball not found at $PREFIX_TARBALL"
+    echo "    build-wine-prefix.sh should have created it."
+    exit 1
+fi
+cp "$PREFIX_TARBALL" "$APP_DIR/usr/share/openiv/prefix.tar.xz"
 echo "    Prefix tarball: $(du -h "$APP_DIR/usr/share/openiv/prefix.tar.xz" | cut -f1)"
 
 # Portable Wine binaries
-cp -a build/prefix-builder/wine/. "$APP_DIR/usr/share/openiv/wine/"
+WINE_SRC="$BUILD_DIR/prefix-builder/wine"
+if [ ! -d "$WINE_SRC" ]; then
+    echo "==> ERROR: Wine binaries not found at $WINE_SRC"
+    echo "    build-wine-prefix.sh should have extracted them."
+    exit 1
+fi
+cp -a "$WINE_SRC/." "$APP_DIR/usr/share/openiv/wine/"
 echo "    Wine binaries:  $(du -sh "$APP_DIR/usr/share/openiv/wine" | cut -f1)"
 
-# ── Step 4 – Run appimagetool ────────────────────────────────────────────────
-echo "==> [4/4] Running appimagetool …"
+# ── Step 5 – Run appimagetool ────────────────────────────────────────────────
+echo "==> [5/5] Running appimagetool …"
 echo ""
 
 if command -v appimagetool >/dev/null 2>&1; then
