@@ -83,13 +83,13 @@ ok "Wine extracted to $WINE_DIR"
 "$WINE_DIR/bin/wine" --version
 
 # ── 3.  Create & configure prefix ─────────────────────────────────────────────
-header "Step 3/5 — Create Wine prefix (win64, Windows 10)"
+header "Step 3/5 — Create Wine prefix (win32, Windows 10)"
 
 rm -rf "$PREFIX_DIR"
 mkdir -p "$PREFIX_DIR"
 
 export WINEPREFIX="$PREFIX_DIR"
-export WINEARCH="win64"
+export WINEARCH="win32"
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
 export WINEDEBUG="-all"
 PATH="$WINE_DIR/bin:$PATH"
