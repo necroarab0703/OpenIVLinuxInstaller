@@ -126,9 +126,8 @@ install_openiv_silent() {
         exit 4
     fi
 
-    log_step "Running installer (InnoSetup /VERYSILENT) …"
-    "$WINE_BINARY" "$BUNDLED_INSTALLER" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- 2>/dev/null || \
-        log_warn "Installer exit code non-zero"
+    log_step "Running installer (interactive) …"
+    "$WINE_BINARY" "$BUNDLED_INSTALLER" 2>/dev/null || log_warn "Installer exited"
 
     "$WINE_SERVER" -k 2>/dev/null || true
     log_ok "Installation phase complete"
