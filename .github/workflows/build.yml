@@ -17,7 +17,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils libgdk-pixbuf2.0-dev
+          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils libgdk-pixbuf2.0-dev fonts-liberation
 
       - name: Download appimagetool
         run: |
@@ -25,25 +25,20 @@ jobs:
           chmod +x /tmp/appimagetool
           cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
 
-      - name: Download OpenIVSetup.exe
-        run: |
-          mkdir -p build
-          wget -q "https://archive.org/download/openiv_202304/OpenIVSetup.exe" -O build/OpenIVSetup.exe
-          echo "OpenIVSetup.exe size: $(du -h build/OpenIVSetup.exe | cut -f1)"
-
       - name: Setup AppDir Structure
         run: |
           APP_DIR="build/openiv-installer.AppDir"
-          mkdir -p "$APP_DIR/usr/share/openiv/wine" "$APP_DIR/usr/share/applications"
+          mkdir -p "$APP_DIR/usr/share/openiv/wine" "$APP_DIR/usr/share/applications" "$APP_DIR/usr/share/openiv/fonts"
           
           cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
-
-          mkdir -p "$APP_DIR/usr/share/openiv/fonts"
-          cp AppImage/fonts/*.ttf "$APP_DIR/usr/share/openiv/fonts/" 2>/dev/null || true
+          
+          # Automatically bundle system fonts as Arial/Tahoma fallbacks for the installer UI
+          cp /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf "$APP_DIR/usr/share/openiv/fonts/Arial.ttf"
+          cp /usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf "$APP_DIR/usr/share/openiv/fonts/Tahoma.ttf"
           
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
@@ -58,11 +53,10 @@ jobs:
         with:
           name: OpenIV Linux Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer v5.0.7
+            ## OpenIV Linux Installer Hybrid Model (v5.1.0)
+            - 100% Self-Contained Font Layer (Fixes invisible text bug natively).
             - Bundles portable Wine 11.9 staging (native x86/32-bit).
-            - Pre-bundled OpenIVSetup.exe and TrueType fonts (Arial, Tahoma).
-            - Injects fonts at runtime to fix invisible text rendering.
-            - Dynamically builds the 32-bit compatibility prefix locally on first launch.
+            - Pre-bundled OpenIVSetup.exe — completely offline installation sequence.
           files: OpenIV-x86_64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
