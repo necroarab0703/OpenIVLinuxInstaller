@@ -42,6 +42,23 @@ chmod +x "$APP_DIR/AppRun"
 cp AppImage/openiv.desktop "$APP_DIR/openiv.desktop"
 cp AppImage/openiv.png "$APP_DIR/openiv.png"
 
+# Local OpenIVSetup.exe — checks project root first, then common locations
+OPENIV_SETUP="${OPENIV_SETUP:-}"
+if [ -z "$OPENIV_SETUP" ]; then
+    for candidate in "$(pwd)/OpenIVSetup.exe" "/tmp/OpenIVSetup.exe"; do
+        if [ -f "$candidate" ]; then
+            OPENIV_SETUP="$candidate"
+            break
+        fi
+    done
+fi
+if [ -n "$OPENIV_SETUP" ] && [ -f "$OPENIV_SETUP" ]; then
+    cp "$OPENIV_SETUP" "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
+    echo "    OpenIVSetup.exe: $(du -h "$OPENIV_SETUP" | cut -f1)"
+else
+    echo "    OpenIVSetup.exe: not found (will be downloaded by CI at build time)"
+fi
+
 # Portable Wine binaries
 WINE_SRC="$BUILD_DIR/prefix-builder/wine"
 if [ ! -d "$WINE_SRC" ]; then

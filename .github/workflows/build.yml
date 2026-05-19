@@ -25,6 +25,12 @@ jobs:
           chmod +x /tmp/appimagetool
           cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
 
+      - name: Download OpenIVSetup.exe
+        run: |
+          mkdir -p build
+          wget -q "https://archive.org/download/openiv_202304/OpenIVSetup.exe" -O build/OpenIVSetup.exe
+          echo "OpenIVSetup.exe size: $(du -h build/OpenIVSetup.exe | cut -f1)"
+
       - name: Setup AppDir Structure
         run: |
           APP_DIR="build/openiv-installer.AppDir"
@@ -34,6 +40,7 @@ jobs:
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
+          cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
           
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
@@ -48,10 +55,10 @@ jobs:
         with:
           name: OpenIV Linux Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer Hybrid Model (v5.0.3)
-            - Bundles portable Wine 11.9 staging.
+            ## OpenIV Linux Installer v5.0.4
+            - Bundles portable Wine 11.9 staging (native x86/32-bit).
+            - Pre-bundled OpenIVSetup.exe — no runtime download needed.
             - Dynamically builds the 32-bit compatibility prefix locally on first launch.
-            - Automatically fetches OpenIVSetup.exe from the reliable gta5-mods CDN mirror.
           files: OpenIV-x86_64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

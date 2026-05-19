@@ -12,10 +12,9 @@ DATA_DIR="$XDG_DATA_HOME/openiv-linux"
 PREFIX_DIR="$DATA_DIR/prefix"
 LAUNCHER_SCRIPT="$DATA_DIR/openiv.sh"
 BIN_DIR="$DATA_DIR/bin"
-DOWNLOADED_INSTALLER="$DATA_DIR/OpenIVSetup.exe"
-OPENIV_MIRROR_URL="https://media.gta5-mods.com/tools/openiv/OpenIVSetup.exe"
 
 BUNDLED_WINE="$APPDIR/usr/share/openiv/wine"
+BUNDLED_INSTALLER="$APPDIR/usr/share/openiv/OpenIVSetup.exe"
 WINE_BINARY="$BUNDLED_WINE/bin/wine"
 WINE_SERVER="$BUNDLED_WINE/bin/wineserver"
 
@@ -121,31 +120,17 @@ install_openiv_silent() {
     export WINEDLLOVERRIDES="winemenubuilder.exe=d"
     export WINEDEBUG="${WINEDEBUG:--all}"
 
-    log_step "Downloading OpenIV installer from mirror …"
-    mkdir -p "$DATA_DIR"
-    if command -v curl >/dev/null 2>&1; then
-        curl -fsSL "$OPENIV_MIRROR_URL" -o "$DOWNLOADED_INSTALLER" 2>/dev/null || {
-            log_err "Failed to download OpenIVSetup.exe from mirror"
-            exit 4
-        }
-    elif command -v wget >/dev/null 2>&1; then
-        wget -q "$OPENIV_MIRROR_URL" -O "$DOWNLOADED_INSTALLER" 2>/dev/null || {
-            log_err "Failed to download OpenIVSetup.exe from mirror"
-            exit 4
-        }
-    else
-        log_err "Neither curl nor wget found — cannot download OpenIV installer"
+    if [ -z "$APPDIR" ] || [ ! -f "$BUNDLED_INSTALLER" ]; then
+        log_err "OpenIVSetup.exe not found at $BUNDLED_INSTALLER"
+        log_err "OpenIV Linux Installer must run from within the AppImage."
         exit 4
     fi
-    log_ok "Downloaded ($(du -h "$DOWNLOADED_INSTALLER" | cut -f1))"
 
     log_step "Running installer (InnoSetup /VERYSILENT) …"
-    "$WINE_BINARY" "$DOWNLOADED_INSTALLER" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- 2>/dev/null || \
+    "$WINE_BINARY" "$BUNDLED_INSTALLER" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- 2>/dev/null || \
         log_warn "Installer exit code non-zero"
 
     "$WINE_SERVER" -k 2>/dev/null || true
-
-    rm -f "$DOWNLOADED_INSTALLER"
     log_ok "Installation phase complete"
 }
 
@@ -242,7 +227,7 @@ main() {
     echo ""
     echo -e "${CYAN}  ╔══════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}  ║${NC}          ${BOLD}OpenIV Linux Installer v5${NC}                        ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}          ${GREEN}[Hybrid – bundled Wine + runtime prefix build]${NC}    ${CYAN}║${NC}"
+    echo -e "${CYAN}  ║${NC}          ${GREEN}[Offline – bundled Wine + installer + runtime prefix]${NC} ${CYAN}║${NC}"
     echo -e "${CYAN}  ╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 
