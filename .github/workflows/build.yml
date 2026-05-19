@@ -35,7 +35,7 @@ jobs:
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           
-          wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-amd64-wow64.tar.xz" -O /tmp/wine-bundle.tar.xz
+          wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
           chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
 
@@ -48,7 +48,7 @@ jobs:
         with:
           name: OpenIV Linux Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer Hybrid Model (v5.0.2)
+            ## OpenIV Linux Installer Hybrid Model (v5.0.3)
             - Bundles portable Wine 11.9 staging.
             - Dynamically builds the 32-bit compatibility prefix locally on first launch.
             - Automatically fetches OpenIVSetup.exe from the reliable gta5-mods CDN mirror.
