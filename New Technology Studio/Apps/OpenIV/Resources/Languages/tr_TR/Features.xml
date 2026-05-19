@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+
+	<!-- Favorites -->
+
+	<AddToFavoritesWindow Caption='Bir favori ekle'>
+		<Label1 Caption='İsim:'/>
+		<Label2 Caption='İçinde oluştur:'/>
+
+		<btnAdd Caption='Ekle'/>
+		<btnCancel Caption='İptal'/>
+		<btnNewFolder Caption='Yeni klasör'/>
+
+		<AeroWindow LinesCount='3'>
+			<StringList>
+				<Item Index='0' Value='Favoriler'/>
+				<Item Index='1' Value='Bir klasör oluştur'/>
+				<Item Index='2' Value='Klasör ismi: '/>
+			</StringList>
+		</AeroWindow>
+	</AddToFavoritesWindow>
+
+	<OrganizeFavoritesWindow Caption='Favorileri Düzenle - $AppName$'>
+		<btnSave Caption='Kaydet'/>
+		<btnCancel Caption='İptal'/>
+		<btnNewFolder Caption='Yeni klasör'/>
+		<btnRemove Caption='Sil'/>
+		<btnClear Caption='Temizle'/>
+
+		<Label1 Caption='Sürükleyip bırakarak favorilerinizi düzenleyebilirsiniz.'/>
+
+		<AeroWindow LinesCount='3'>
+			<StringList>
+				<Item Index='0' Value='Favoriler'/>
+				<Item Index='1' Value='Bir klasör oluştur'/>
+				<Item Index='2' Value='Klasör ismi: '/>
+			</StringList>
+		</AeroWindow>
+	</OrganizeFavoritesWindow>
+
+	<!-- Archive Defragmenter -->
+
+	<DefragmenterWindow Caption='Arşiv Birleştiricisi - $AppName$'>
+		<!-- Labels -->
+		<lbDescription Caption="Arşiv birleştiricisi dosyaları birleştirerek bilgisayarınızdaki kaplanan yeri azaltır."/>
+		<lbNoteSave Caption='Yaptığınız değişiklikler hemen kaydedilir, her yaptığınız değişiklikten sonra birleştiriciyi kullanmanıza gerek yoktur.'/>
+		<lbNoteRevert Caption='Arşiv birleştiricisi arşivde yaptığınız herhangi bir değişikliği geri almaz.'/>
+		<!-- Actions -->
+		<actClose Caption='Kapat'/>
+		<actRebuild Caption='Birleştir'/>
+		<actAddFile Caption='Dosya ekle'/>
+		<actAddFolder Caption='Klasör ekle'/>
+		<actRemoveFile Caption='Dosyayı sil'/>
+		<actClear Caption='Listeyi temizle'/>
+		<!-- Columns -->
+		<lvFiles>
+			<Columns>
+				<Item Index='0' Caption=''/>
+				<Item Index='1' Caption='İsim'/>
+				<Item Index='2' Caption='Yer'/>
+				<Item Index='3' Caption='Tür'/>
+			</Columns>
+		</lvFiles>
+		<!-- Messages -->
+		<AeroWindow LinesCount='4'>
+			<StringList>
+				<Item Index='0' Value='Her şey tamamlandı.'/>
+				<Item Index='1' Value='Arşiv birleştiricisi - $AppName$'/>
+				<Item Index='2' Value='Yeniden birleştirilen arşivi açmak ister misiniz?'/>
+				<Item Index='3' Value='Bazı dosyalar işlenmedi.'/>
+			</StringList>
+		</AeroWindow>
+	</DefragmenterWindow>
+
+	<!-- Archive properties -->
+
+	<ArchivePropertiesWindow Caption='Arşiv bilgisi'>
+		<!-- Button's -->
+		<btnClose Caption='Kapat'/>
+		<!-- Label's -->
+		<lbType Caption='Tür:'/>
+		<lbVersion Caption='Sürüm:'/>
+		<lbCount Caption='Dosya sayısı:'/>
+
+		<lbCGame Caption='Mevcut oyun:'/>
+		<lbCPlatform Caption='Mevcut platform:'/>
+
+		<lbCodeModule Caption='Modül:'/>
+		<lbCMVersion Caption='Modül sürümü:'/>
+	</ArchivePropertiesWindow>
+
+	<!-- openFormats -->
+
+	<openFormatsImportWindow Caption='openFormats&apos;a aktar - $AppName$'>
+		<!-- Label's -->
+		<lbOfFileName Caption='Dosya aktar:'/>
+		<lbOfFiles Caption='Dosya aktar:'/>
+		<lbNewFileName Caption='Yeni dosya adı:'/>
+		<!-- Button's -->
+		<btnAdd Caption='Ekle'/>
+		<btnRemove Caption='Sil'/>
+		<btnCancel Caption='İptal'/>
+		<btnOk Caption='Tamam'/>
+		<tbLeanMore Caption='openFormats ile ilgili daha fazla bilgi'/>
+		<!-- Check box -->
+		<cbProtectMesh Caption='Ağı koru (tekrar çıkartılmasını engelle)'/>
+	</openFormatsImportWindow>
+
+	<openFormatsValidatorWindow Caption='openFormats doğrulayıcı - $AppName$'>
+		<btnClose Caption='Close'/>
+		<!-- Strings -->
+		<AeroWindow LinesCount='100'>
+			<StringList>
+				<Item Index='0' Value='Bazı dosyalar aktarılamadı, daha fazla bilgi aşağıdadır.'/>
+				<!-- Version errors  -->
+				<Item Index='1' Value='%S(Satır %D): Desteklenmeyen kaynak sürümü, mevcut: "%S", istenen: "%D".'/>
+				<Item Index='2' Value='%S(Satır %D): Desteklenmeyen format sürümü, mevcut: "%S", istenen: "%D".'/>
+				<!-- Common errors -->
+				<Item Index='3' Value='Kritik hata: Direct3D başlatılamadı.'/>
+				<Item Index='4' Value='Kritik hata: "%S" dosyası bulunamadı.'/>
+				<Item Index='5' Value='%S(Satır %D):"%S" dosyası bulunamadı.'/>
+				<Item Index='6' Value='%S(Satır %D): Dosya bozuk.'/>
+				<Item Index='7' Value='%S(Satır %D): "%s" değeri beklenirken "%s" değeri bulundu.'/>
+				<Item Index='8' Value='%S(Satır %D): "%s" değeri bulunamadı.'/>
+				<Item Index='9' Value='%S(Satır %D): Yetersiz değişken.'/>
+				<!-- Collision errors -->
+				<Item Index='10' Value='%S(Satır %D): Bilinmeyen çarpışma modeli bağ tipi: "%S".'/>
+				<Item Index='11' Value='%S(Satır %D): Çarpışma modeli çok büyük.'/>
+				<Item Index='12' Value='%S(Satır %D): Çarpışma modeli bozuk.'/>
+				<!-- Skeleton errors -->
+				<Item Index='13' Value='%S(Satır %D): Kemik ismi yok.'/>
+				<!-- Geometry/Graphics/Drawables errors -->
+				<Item Index='14' Value='%S(Satır %D): Ağ kilitli.'/>
+				<Item Index='15' Value='%S(Satır %D): Materyal indeksi sınırların dışında.'/>
+				<Item Index='16' Value="%S(Satır %D): Gölgelendirme düzenlenemez."/>
+				<Item Index='17' Value="%S(Satır %D): Bir geometride çok fazla kemik var, 48 kemikten daha fazlasını kullanamazsınız."/>
+
+				<Item Index='18' Value="%S(Satır %D): %S"/>
+
+				<!-- Export/Import -->
+				<Item Index='19' Value='openFormats içe aktarma raporu'/>
+				<Item Index='20' Value='openFormats dışa aktarma raporu'/>
+				<Item Index='21' Value='Bazı dosyalar dışa aktarılamadı, daha fazla bilgi aşağıdadır.'/>
+
+			</StringList>
+		</AeroWindow>
+	</openFormatsValidatorWindow>
+
+</Translation>

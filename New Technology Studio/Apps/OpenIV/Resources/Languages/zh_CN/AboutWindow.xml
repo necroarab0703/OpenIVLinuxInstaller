@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<AboutWindow3 Caption='About $AppName$'/>
+	<RenderUI>
+		<string name="VERSION_LABEL_2">版本 %D.%D (Build %D; 日期 %S)</string>
+		<string name="VERSION_LABEL_3">版本 %D.%D.%D (Build %D; 日期 %S)</string>
+		<string name="THE_TEAM">开发团队</string>
+		<string name="THIRD_PARTY">第三方</string>
+		<string name="THIRD_PARTY_LINE">本程序所使用的部分组件</string>
+		<string name="THANKS_TO">致谢</string>
+		<string name="ALPHABETICALLY">(按拉丁字母表排序)</string>
+		<string name="SPECIAL_THANKS_TO">特别致谢</string>
+		<string name="LICENSE_TERMS">软件许可条款</string>
+		<string name="LOCALIZATION">本地化提供者</string>
+		<string name="DEBUG_INFO">调试信息</string>
+		<string name="CLIENT_ID">客户端 ID</string>
+
+		<!-- Community Dialog -->
+		<string name="JOIN_COMMUNITY">加入 $AppName$ 社区</string>
+		<string name="JOIN_DISCUSSION">加入 $AppName$ 讨论</string>
+		<string name="SUPPORT_DONATE">捐助 $AppName$</string>
+		<string name="WELCOME_TO_VER">欢迎来到 %S</string>
+		<string name="WATCH_THE_VIDEO">愿意观看介绍新版本内容的视频吗?</string>
+		<string name="VIDEO_NOTE">您可能会在视频播放之前或期间看到广告。 通过观看此视频，您可以帮助 $AppName$ 获得更多的支持</string>
+		<string name="NO_THANKS">不用谢</string>
+	</RenderUI>
+</Translation>

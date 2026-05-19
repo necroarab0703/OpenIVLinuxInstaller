@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<PreloaderWindow>
+		<WelcomeScreen>
+			<!-- Button's -->
+			<btnClose Caption='Kapat'/>
+			<btnEULANext Caption='Devam et'/>
+			<btnWebNext Caption='Devam et'/>
+			<btnGame Caption='Göz at...' Hint='Klasör seç:'/>
+			<btnGameNext Caption='Devam et'/>
+			<btnSetPermissions Caption='İzinleri ayarla'/>
+			<btnWindowsNext Caption='Devam et'/>
+			<btnBackupNext Caption='Devam et'/>
+			<btnSocialNext Caption='Devam et'/>
+			<btnSocialYouTube Caption='$AppName$ YouTube kanalı'/>
+			<btnSocialTwitter Caption='$AppName$ Twitter hesabı'/>
+			<btnSocial_FB Caption='$AppName$ Facebook sayfası'/>
+			<btnSocial_VK Caption='$AppName$ VK sayfası'/>
+			<!-- Link's -->
+			<LnkWebLangs Caption='$AppName$&apos;ı başka bir dile çevir'/>
+			<LnkWebEULA Caption='Lisansı buradan okuyun.'/>
+			<!-- CheckBox's -->
+			<cbAcceptEULA Caption='$AppName$ Lisans Sözleşmesi&apos;ni okudum ve bu sözleşmedeki maddeleri kabul ediyorum.'/>
+			<!-- Strings -->
+			<StringList SetCount='30'>
+				<Lines>
+					<Item Index='00' Value='$AppName$ Kullanım Sözleşmesi'/>
+					<Item Index='01' Value='$AppName$&apos;ı kullanmadan önce belirtilen kullanım sözleşmesini okuyup kabul etmeniz gerekiyor.'/>
+					<Item Index='02' Value=''/>
+					<Item Index='03' Value=''/>
+					<Item Index='04' Value='Servis Geçici Olarak Kullanılamıyor.'/>
+					<Item Index='05' Value='$RageGAME$ klasörünü seçin'/>
+					<Item Index='06' Value='Oyun konumunu seçmezseniz $AppName$, $RageGAME_SHORT$ dosyalarını, yeterli bilgiye sahip olmadığı için açamaz. Lütfen $RageGAME$ oyununun yüklü olduğu yeri aşağıda doğru bir şekilde belirtin.'/>
+					<Item Index='07' Value='$RageGAME$ konumu:'/>
+					<Item Index='08' Value='Hata: Bu klasör yok.'/>
+					<Item Index='09' Value='Başarılı: $AppName$ bu klasör ile çalışabilir.'/>
+					<Item Index='10' Value="Hata: Bu klasör '$RageEncryptionStorage$' dosyasını içermiyor."/>
+					<Item Index='11' Value='Başarılı: $RageEncryptionStorage$, sürüm %s\n$AppName$ bu dosya ile çalışabilir.'/>
+					<Item Index='12' Value='Yedekler'/>
+					<Item Index='13' Value='Düzenleme yapmadan önce orijinal dosyalarınızı yedeklemeyi unutmayın.'/>
+					<Item Index='14' Value='Windows 7'/>
+					<Item Index='15' Value='$AppName$ en iyi Microsoft® Windows 7™ üzerinde çalışır'/>
+					<Item Index='16' Value='İsminiz:'/>
+					<Item Index='17' Value="Hata: $AppName$&apos;in bu klasöre erişim izni yok.\nGereken izinleri değiştirebilir veya $AppName$&apos;i yönetici olarak çalıştırabilirsiniz."/>
+					<Item Index='18' Value='$AppName$ topluluğuna katılın'/>
+					<Item Index='19' Value='$AppName$ - Onay'/>
+					<Item Index='20' Value='Ayarlama işlemleri henüz bitmedi.\nÇıkmak istediğinizden emin misiniz?'/>
+					<Item Index='21' Value="Hata: $AppName$&apos;ın '$RageEncryptionStorage$' dosyasına erişim izni yok.\nGereken izinleri ayarlayabilir veya $AppName$&apos;ı yönetici olarak çalıştırabilirsiniz."/>
+					<Item Index='22' Value="Hata: $RageGAME$ şu anda çalışıyor. $AppName$&apos;ı kullanmadan önce oyunu kapatın."/>
+					<Item Index='23' Value="Her şey hazır.\nOyun klasörünüze gereken izinler eklendi."/>
+					<Item Index='24' Value="İzinler eklenemedi."/>
+					<Item Index='25' Value="Hata: Şifreleme anahtarı '$RageEncryptionStorage$' dosyasında bulunamadı."/>
+				</Lines>
+			</StringList>
+		</WelcomeScreen>
+		<UpdateScreen>
+			<!-- Button's -->
+			<btnExit Caption='Çıkış'/>
+			<btnInstall Caption='İndir ve yükle'/>
+			<!-- Label's -->
+			<lbTitle Caption='$AppName$ güncellemesi'/>
+			<lbText Caption='$AppName$ için bir güncelleme mevcut. $AppName$&apos;ı çalıştırmadan önce güncellemeyi yüklemelisiniz.'/>
+			<lbStatus Caption='İndirme boyutu: '/>
+			<cbInstallUpdatesAutomatically Caption='Güncellemeleri otomatik olarak yükle'/>
+			<lbCurrentVersion Caption='Yüklü sürüm:'/>
+			<lbNewVersion Caption='Yeni sürüm:'/>
+			<!-- Strings -->
+			<StringList SetCount='10'>
+				<Lines>
+					<Item Index='0' Value=' Mb'/>
+					<Item Index='1' Value='İndirme için hazırlanılıyor...'/>
+					<Item Index='2' Value='İndirilen: %f/%f Mb'/>
+					<Item Index='3' Value='Güncelleniyor...'/>
+					<Item Index='4' Value='Güncelleme hatası, lütfen daha sonra tekrar deneyin.'/>
+					<Item Index='5' Value='%d.%d.%d (Build %d; Tarih %s)'/>
+					<Item Index='6' Value='Bu güncelleme hata düzeltmeleri ve küçük iyileştirmeler içerir.'/>
+					<Item Index='7' Value='Bu güncelleme yeni özellikler, hata düzeltmeleri, arayüz değişiklikleri ve büyük iyileştirmeler içerir.'/>
+					<Item Index='8' Value=''/>
+					<Item Index='9' Value=''/>
+				</Lines>
+			</StringList>
+		</UpdateScreen>
+		<ChangeGameScreen>
+			<!-- Button's -->
+			<btnExit Caption='Çıkış'/>
+			<btnContinue Caption='Devam et'/>
+			<!-- Strings -->
+			<StringList SetCount='10'>
+				<Lines>
+					<Item Index='00' Value='Kritik uygulama hatası'/>
+					<Item Index='01' Value='$AppName$&apos;ı "$RageEncryptionStorage$" dosyası ile aynı klasöre yüklemişsiniz ve bu yanlış.\nLütfen $AppName$&apos;ı ayrı bir klasöre yükleyin.'/>
+					<Item Index='02' Value='$RageGAME$ klasörünü değiştir'/>
+					<Item Index='03' Value='Bir şeyler ters gitti, lütfen $RageGAME$ klasörünü aşağıdan değiştirin ve $AppName$&apos;ı yeniden başlatın.'/>
+					<Item Index='04' Value='Hata: Bu klasör bulunamadı.'/>
+					<Item Index='05' Value='Başarılı: $AppName$ bu klasör ile çalışabilir.'/>
+					<Item Index='06' Value="Hata: Bu klasör '$RageEncryptionStorage$' dosyasını içermiyor."/>
+					<Item Index='07' Value='Başarılı: $RageEncryptionStorage$, sürüm %s\n$AppName$ bu dosya ile çalışabilir.'/>
+					<Item Index='08' Value='Göz At'/>
+					<Item Index='09' Value="Hata: $AppName$&apos;ın bu klasöre erişim izni yok.\n$AppName$&apos;ı yönetici olarak çalıştırın."/>
+					<Item Index='10' Value="Hata: Şifreleme anahtarı '$RageEncryptionStorage$' dosyasında bulunamadı."/>
+				</Lines>
+			</StringList>
+		</ChangeGameScreen>
+	</PreloaderWindow>
+</Translation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<define class="CRDR3PsoData" tag="default">
+		<if:ext platform="true">#as</if:ext>
+		<if:ext platform="true">#ch</if:ext>
+		<if:ext platform="true">#mf</if:ext>
+		<if:ext platform="true">#mt</if:ext>
+		<if:ext platform="true">#map</if:ext>
+		<if:ext platform="true">#typ</if:ext>
+	</define>
+</library>

@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<define class="CCommonClass" tag="Text">
+		<if:ext>datnew</if:ext>
+		<if:ext>cut</if:ext>
+		<if:ext>csv</if:ext>
+		<if:ext>ide</if:ext>
+		<if:ext>ipl</if:ext>
+		<if:ext>dat</if:ext>
+		<if:ext>rbs</if:ext>
+		<if:ext>zon</if:ext>
+		<if:ext>cmb</if:ext>
+		<if:ext>ped</if:ext>
+	</define>
+
+	<define class="CAdvancedTextClass" tag="default">
+
+	</define>
+
+	<define class="CCommonClass" tag="Image">
+		<if:ext>tag</if:ext>
+	</define>
+
+	<define class="CArchiveClass" tag="default">
+		<if:ext>img</if:ext>
+	</define>
+
+	<define class="CIVDataClass" tag="Placement">
+		<if:ext platform="True" >#pl</if:ext>
+	</define>
+
+	<define class="CIVAudioClass" tag="Wave">
+		<if:ext>RAGE_AUDIO_FILE</if:ext>
+	</define>
+
+	<define class="CIVAudioClass" tag="Bank">
+		<if:ext>RAGE_SOUND_BANK</if:ext>
+	</define>
+
+	<define class="CGXTFileClass" tag="default">
+		<if:ext>gxt</if:ext>
+	</define>
+
+	<define class="CIVScriptClass" tag="default">
+		<if:ext>sco</if:ext>
+	</define>
+
+</library>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!-- Don't edit this file manual, use gTypes.exe! -->
+<Library>
+  <globals>
+    <item offset="18">
+      <name>g_CellPhone3D</name>
+      <type array="false">cellphone3Dstructure</type>
+    </item>
+    <item offset="8318">
+      <name>g_ScriptedConversationPriority</name>
+      <type array="false"/>
+    </item>
+    <item offset="8320">
+      <name>g_speechControlStatus</name>
+      <type array="false"/>
+    </item>
+    <item offset="8955">
+      <name>g_CarGenerators</name>
+      <type array="false"/>
+    </item>
+    <item offset="9308">
+      <name>g_ContactPoints</name>
+      <type array="true">ContactPointItem</type>
+    </item>
+    <item offset="9652">
+      <name>g_DropoffPoints</name>
+      <type array="false"/>
+    </item>
+    <item offset="9709">
+      <name>g_FriendPickupPoints</name>
+      <type array="false"/>
+    </item>
+    <item offset="9847">
+      <name>g_labelPlayerStatMissionName</name>
+      <type array="false"/>
+    </item>
+    <item offset="9860">
+      <name>g_MaxWantedLevel</name>
+      <type array="false"/>
+    </item>
+    <item offset="9864">
+      <name>g_SaveHouses</name>
+      <type array="false"/>
+    </item>
+    <item offset="9920">
+      <name>g_PoliceRestartPositions</name>
+      <type array="true">RestartPositionItem</type>
+    </item>
+    <item offset="10011">
+      <name>g_HospitalRestartPositions</name>
+      <type array="true">RestartPositionItem</type>
+    </item>
+    <item offset="10245">
+      <name>g_MainMissionsMapBlips</name>
+      <type array="false"/>
+    </item>
+    <item offset="10899">
+      <name>g_OnMission</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="10902">
+      <name>g_GOSUBs</name>
+      <type array="false"/>
+    </item>
+    <item offset="15526">
+      <name>g_SynchronisationSignals</name>
+      <type array="false"/>
+    </item>
+    <item offset="15652">
+      <name>g_MissionFlowVectors</name>
+      <type array="false"/>
+    </item>
+    <item offset="15795">
+      <name>g_ChatPhonecalls</name>
+      <type array="false"/>
+    </item>
+    <item offset="26336">
+      <name>g_DefaultContactBlips</name>
+      <type array="false"/>
+    </item>
+    <item offset="26679">
+      <name>g_MainMissionsTriggers</name>
+      <type array="False"/>
+    </item>
+    <item offset="32560">
+      <name>g_MaxMissionTriggers</name>
+      <type array="false"/>
+    </item>
+    <item offset="32618">
+      <name>g_R3Missions</name>
+      <type array="false"/>
+    </item>
+    <item offset="32745">
+      <name>g_MaxR3MissionTriggers</name>
+      <type array="false"/>
+    </item>
+    <item offset="64443">
+      <name>g_HelpMessageConflicts</name>
+      <type array="false"/>
+    </item>
+    <item offset="64713">
+      <name>g_ProceduralsMissions</name>
+      <type array="false"/>
+    </item>
+    <item offset="64729">
+      <name>g_Games</name>
+      <type array="false"/>
+    </item>
+    <item offset="64742">
+      <name>g_Friends</name>
+      <type array="false"/>
+    </item>
+    <item offset="64759">
+      <name>g_SpecialMissions</name>
+      <type array="false"/>
+    </item>
+    <item offset="64769">
+      <name>g_RandomChars</name>
+      <type array="false"/>
+    </item>
+    <item offset="64800">
+      <name>g_OddJobs</name>
+      <type array="false"/>
+    </item>
+    <item offset="64807">
+      <name>g_Misc</name>
+      <type array="false"/>
+    </item>
+    <item offset="10">
+      <name>g_bWantToShutdownForNetworkGame</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="13">
+      <name>g_NetworkGameMode</name>
+      <type array="False">NETWORK_GAME_MODE</type>
+    </item>
+    <item offset="63909">
+      <name>g_eAmbientTxtmsgs</name>
+      <type array="True"/>
+    </item>
+    <item offset="26674">
+      <name>g_doingHospitalPickup</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="17">
+      <name>g_MissionComplete</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="0">
+      <name>g_DisableStats</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="9814">
+      <name>g_ReplayInfo</name>
+      <type array="False"/>
+    </item>
+    <item offset="15">
+      <name>g_SinglePlayerGame</name>
+      <type array="False"/>
+    </item>
+    <item offset="34206">
+      <name>g_MissionFlow</name>
+      <type array="False"/>
+    </item>
+    <item offset="64847">
+      <name>g_RomanTaxiScriptLoaded</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="64846">
+      <name>g_JacobGunCarScriptLoaded</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="64848">
+      <name>g_RomanTaxiScriptLoaded1</name>
+      <type array="False">bool</type>
+    </item>
+    <item offset="64845">
+      <name>g_PackieBombScriptLoaded</name>
+      <type array="False">bool</type>
+    </item>
+  </globals>
+  <types>
+    <item name="cellphone3Dstructure" IsStructure="True">
+      <field offset="008" type="ModelProperties" array="False">Model</field>
+      <field offset="044" type="" array="false">RenderID</field>
+      <field offset="100" type="bool" array="False">HideCellphone</field>
+      <field offset="104" type="bool" array="False">DisableCellphone</field>
+      <field offset="372" type="bool" array="False">MissionAnsweredPhone</field>
+      <field offset="376" type="bool" array="False">OverrideCellphoneChecks</field>
+      <field offset="424" type="" array="False">multipleChoiceNumber</field>
+    </item>
+    <item name="ModelProperties" IsStructure="true">
+      <field offset="00" type="XYZ" array="false">Position</field>
+      <field offset="12" type="XYZ" array="false">Rotation</field>
+      <field offset="24" type="" array="false">Scale</field>
+    </item>
+    <item name="XYZ" IsStructure="true">
+      <field offset="0" type="" array="false">x</field>
+      <field offset="4" type="" array="false">y</field>
+      <field offset="8" type="" array="false">z</field>
+    </item>
+    <item name="ContactPointItem" IsStructure="true">
+      <field offset="00" type="XYZ" array="false">Position</field>
+      <field offset="12" type="" array="false">DefaultBlips</field>
+    </item>
+    <item name="RestartPositionItem" IsStructure="true">
+      <field offset="04" type="XYZ" array="False">Position</field>
+      <field offset="20" type="" array="false">Blip</field>
+    </item>
+    <item name="NETWORK_GAME_MODE" IsStructure="False">
+      <value integer="-1">SINGLE_PLAYER</value>
+    </item>
+    <item name="bool" IsStructure="False">
+      <value integer="0">FALSE</value>
+      <value integer="1">TRUE</value>
+    </item>
+    <item name="Integer" IsStructure="False"/>
+    <item name="DWORD" IsStructure="False"/>
+    <item name="Float" IsStructure="False"/>
+    <item name="Char" IsStructure="False"/>
+    <item name="Byte" IsStructure="False"/>
+    <item name="Short" IsStructure="False"/>
+    <item name="WORD" IsStructure="False"/>
+  </types>
+</Library>

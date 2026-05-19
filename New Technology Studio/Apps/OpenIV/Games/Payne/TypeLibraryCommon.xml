@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<define class="CCommonClass" tag="Hex">
+		<if:ext>bin</if:ext>
+	</define>
+	
+	<define class="CCommonClass" tag="Text">
+		<if:ext>datnew</if:ext>
+		<if:ext>dat</if:ext>
+		<if:ext>rbs</if:ext>
+		<if:ext>cmb</if:ext>
+		<if:ext>ped</if:ext>
+		<if:ext>py</if:ext>
+		<if:ext>tcp</if:ext>
+	</define>
+	
+	<define class="CTextClass" tag="default">
+		<if:ext>cutsub</if:ext>
+		<if:ext>csv</if:ext>
+		<if:ext>ide</if:ext>
+		<if:ext>ipl</if:ext>
+		<if:ext>zon</if:ext>
+		<if:ext>lst</if:ext>
+	</define>
+
+	<define class="CAdvancedTextClass" tag="default">
+	</define>
+
+	<define class="CCommonClass" tag="Image">
+	</define>
+
+	<define class="CMP3DataClass" tag="Placement">
+		<if:ext platform="True" >#pl</if:ext>
+	</define>
+	
+	<define class="CGXTFileClass" tag="default">
+		<if:ext>gxt</if:ext>
+	</define>
+	
+	<define class="CMP3CutsceneFileHandler" tag="default">
+		<if:ext>cut</if:ext>
+	</define>
+	
+</library>

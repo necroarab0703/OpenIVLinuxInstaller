@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<PreloaderWindow>
+		<WelcomeScreen>
+			<!-- Button's -->
+			<btnClose Caption='Fermer'/>
+			<btnEULANext Caption='Continuer'/>
+			<btnWebNext Caption='Continuer'/>
+			<btnGame Caption='Parcourir...' Hint='Sélectionnez le dossier :'/>
+			<btnGameNext Caption='Continuer'/>
+			<btnSetPermissions Caption='Définir les permissions'/> 
+			<btnWindowsNext Caption='Continuer'/>
+			<btnBackupNext Caption='Continuer'/>
+			<btnSocialNext Caption='Continuer'/>
+			<btnSocialYouTube Caption='Chaîne YouTube $AppName$'/>
+			<btnSocialTwitter Caption='$AppName$ sur Twitter'/>
+			<btnSocial_FB Caption='Page Facebook $AppName$'/>
+			<btnSocial_VK Caption='Page VK $AppName$'/>
+			<!-- Link's -->
+			<LnkWebLangs Caption='Traduire $AppName$ dans une autre langue'/>
+			<LnkWebEULA Caption='Lire la licence ici.'/>
+			<!-- CheckBox's -->
+			<cbAcceptEULA Caption="J'ai lu et j'accepte les termes du contrat de licence de $AppName$"/>
+			<!-- Strings -->
+			<StringList SetCount='30'>
+				<Lines>
+					<Item Index='00' Value="Termes d'utilisation de $AppName$"/>
+					<Item Index='01' Value="Avant d'utiliser $AppName$, vous devez lire et accepter les termes d'utilisation suivants."/>
+					<Item Index='02' Value=''/>
+					<Item Index='03' Value=''/>
+					<Item Index='04' Value='Service temporairement indisponible.'/>
+					<Item Index='05' Value='Choisissez le répertoire de $RageGAME$'/>
+					<Item Index='06' Value="Sans donner le répertoire du jeu, $AppName$ ne pourra pas ouvrir les fichiers de $RageGAME_SHORT$. Merci de donner le répertoire d'installation de $RageGAME$ ci-dessous."/>
+					<Item Index='07' Value='Emplacement de $RageGAME$ :'/>
+					<Item Index='08' Value='Erreur : répertoire inexistant.'/>
+					<Item Index='09' Value='Validé : $AppName$ peut utiliser ce répertoire.'/>
+					<Item Index='10' Value="Erreur : Ce répertoire ne contient pas le fichier '$RageEncryptionStorage$'."/>
+					<Item Index='11' Value='Validé : $RageEncryptionStorage$, version %s\n$AppName$ peut travailler avec ce fichier.'/>
+					<Item Index='12' Value='Sauvegardes'/>
+					<Item Index='13' Value="N'oubliez pas de sauvegarder vos fichiers avant de les éditer."/>
+					<Item Index='14' Value='Windows 7'/>
+					<Item Index='15' Value='$AppName$ fonctionne mieux avec Microsoft® Windows 7™'/>
+					<Item Index='16' Value='Votre nom :'/>
+					<Item Index='17' Value="Erreur: $AppName$ n'a pas les permissions nécessaires pour modifier ce répertoire.\nVous pouvez définir les permissions ou lancer $AppName$ en tant qu'administrateur."/>
+					<Item Index='18' Value='Rejoignez la communauté de $AppName$'/>
+					<Item Index='19' Value='$AppName$ - Confirmation'/>
+					<Item Index='20' Value="Le processus de configuration n'est pas terminé.\nVoulez-vous vraiment quitter ?"/>
+					<Item Index='21' Value="Erreur : $AppName$ n'a pas les permissions nécessaire pour travailler avec '$RageEncryptionStorage$'.\nVous pouvez définir les permissions ou lancer $AppName$ en tant qu'administrateur."/>
+					<Item Index='22' Value="Erreur: $RageGAME$ est lancé. Fermez le jeu avant d'utiliser $AppName$."/>
+					<Item Index='23' Value="Terminé.\nLes permissions ont été définies pour le répertoire."/>
+					<Item Index='24' Value="Impossible de définir les permissions."/>
+					<Item Index='25' Value="Erreur : La clé de chiffrement n'a pas été trouvée dans le fichier '$RageEncryptionStorage$'."/> 
+				</Lines>
+			</StringList>
+		</WelcomeScreen>
+		<UpdateScreen>
+			<!-- Button's -->
+			<btnExit Caption='Quitter'/>
+			<btnInstall Caption='Télécharger et installer'/>
+			<!-- Label's -->
+			<lbTitle Caption='Mise à jour de $AppName$'/>
+			<lbText Caption="Une nouvelle mise à jour est disponible pour $AppName$. Vous devez l'installer pour utiliser $AppName$."/>
+			<lbStatus Caption='Taille du téléchargement :'/>
+			<cbInstallUpdatesAutomatically Caption='Installer les mises à jour automatiquement'/>
+			<lbCurrentVersion Caption='Votre version :'/>
+			<lbNewVersion Caption='Version disponible :'/>
+			<!-- Strings -->
+			<StringList SetCount='10'>
+				<Lines>
+					<Item Index='0' Value=' Mo'/>
+					<Item Index='1' Value='Préparation au téléchargement...'/>
+					<Item Index='2' Value='Téléchargé : %f of %f Mo'/>
+					<Item Index='3' Value='Mise à jour...'/>
+					<Item Index='4' Value='Erreur lors de la mise à jour, veuillez réessayer ultérieurement.'/>
+					<Item Index='5' Value='%d.%d.%d (Build %d; Date %s)'/>
+					<Item Index='6' Value='Cette mise à jour apporte des corrections de bugs et quelques améliorations'/>
+					<Item Index='7' Value="Cette mise à jour apporte de nouvelles fonctionnalités, des corrections de bugs, des modifications de l'interface et des améliorations."/>
+					<Item Index='8' Value=''/>
+					<Item Index='9' Value=''/>
+				</Lines>
+			</StringList>
+		</UpdateScreen>
+		<ChangeGameScreen>
+			<!-- Button's -->
+			<btnExit Caption='Quitter'/>
+			<btnContinue Caption='Continuer'/>
+			<!-- Strings -->
+			<StringList SetCount='20'>
+				<Lines>
+					<Item Index='00' Value='Erreur fatale'/>
+					<Item Index='01' Value='Vous avez installé $AppName$ dans le même dossier que "$RageEncryptionStorage$".\nMerci de placer $AppName$ dans un répertoire différent.'/>
+					<Item Index='02' Value='Changer le répertoire de $RageGAME$'/>
+					<Item Index='03' Value='Erreur, veuillez changer le répertoire de $RageGAME$ et redémarrer $AppName$.'/>
+					<Item Index='04' Value="Erreur : Ce répertoire n'existe pas."/>
+					<Item Index='05' Value='Validé : $AppName$ peut utiliser ce répertoire.'/>
+					<Item Index='06' Value="Erreur: Ce répertoire ne contient pas le fichier '$RageEncryptionStorage$'."/>
+					<Item Index='07' Value='Validé : $RageEncryptionStorage$, version %s\n$AppName$ peut travailler avec ce fichier.'/>
+					<Item Index='08' Value='Parcourir'/>
+					<Item Index='09' Value="Erreur: $AppName$ n'a pas les permissions nécessaires pour modifier ce répertoire.\nLancez $AppName$ en tant qu'administrateur."/>
+					<Item Index='10' Value="Erreur : La clé de chiffrement n'a pas été trouvée dans le fichier '$RageEncryptionStorage$'."/> 
+				</Lines>
+			</StringList>
+		</ChangeGameScreen>
+	</PreloaderWindow>
+</Translation>

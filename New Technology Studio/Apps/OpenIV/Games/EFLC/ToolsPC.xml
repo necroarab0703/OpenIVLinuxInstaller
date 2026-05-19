@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tools>
+	<animationViewer>
+		<ped>
+			<img file="pc\anim\anim.img">anim.img (GTA IV)</img>
+			<img file="TLAD\pc\anim\anim.img">anim.img (TLAD)</img>
+			<img file="TBoGT\pc\anim\anim.img">anim.img (TBoGT)</img>
+			<models>
+				<playerped name="GTA IV" archive="pc\models\cdimages\playerped.rpf">
+					<part>head_000_r.wdr</part>
+					<part>teef_000_u.wdr</part>
+					<part>uppr_000_u.wdr</part>
+					<part>hand_000_r.wdr</part>
+					<part>lowr_000_u.wdr</part>
+					<part>feet_000_u.wdr</part>
+					<part>hair_000_u.wdr</part>
+				</playerped>
+				<playerped name="TLAD" archive="TLAD\pc\models\cdimages\playerped.rpf">
+					<part>head_000_r.wdr</part>
+					<part>teef_000_u.wdr</part>
+					<part>uppr_000_u.wdr</part>
+					<part>hand_000_r.wdr</part>
+					<part>lowr_000_u.wdr</part>
+					<part>feet_000_u.wdr</part>
+				</playerped>
+				<playerped name="TBoGT" archive="TBoGT\pc\models\cdimages\playerped.rpf">
+					<part>head_000_r.wdr</part>
+					<part>teef_000_u.wdr</part>
+					<part>uppr_000_u.wdr</part>
+					<part>hand_000_r.wdr</part>
+					<part>lowr_000_u.wdr</part>
+					<part>feet_000_u.wdr</part>
+					<part>hair_000_u.wdr</part>
+				</playerped>
+				<componentpeds archive="pc\models\cdimages\componentpeds.img" id="IV_">componentpeds.img - GTA IV</componentpeds>
+				<componentpeds archive="TLAD\pc\models\cdimages\componentpeds.img" id="TLAD_">componentpeds.img - TLAD</componentpeds>
+				<componentpeds archive="TBoGT\pc\models\cdimages\componentpeds.img" id="TBoGT_">componentpeds.img - TBoGT</componentpeds>
+			</models>
+		</ped>
+		<cut>
+			<data name="GTA IV">
+				<cuts>pc\anim\cuts.img</cuts>
+				<cutsprops>
+					<img>pc\anim\cutsprops.img</img>
+					<img>pc\models\cdimages\componentpeds.img</img>
+					<img>pc\models\cdimages\vehicles.img</img>
+				</cutsprops>
+				<playerped>pc\models\cdimages\playerped.rpf</playerped>
+				<audio path="CUTSCENES\">\pc\audio\Sfx\cutscenes.rpf</audio>
+			</data>
+			<data name="The Lost and Damned">
+				<cuts>TLAD\pc\anim\cuts.img</cuts>
+				<cutsprops>
+					<img>TLAD\pc\anim\cutsprops.img</img>
+					<img>TLAD\pc\models\cdimages\componentpeds.img</img>
+					<img>TLAD\pc\models\cdimages\vehicles.img</img>
+					<img>pc\anim\cutsprops.img</img>
+					<img>pc\models\cdimages\componentpeds.img</img>
+					<img>pc\models\cdimages\vehicles.img</img>
+				</cutsprops>
+				<playerped>TLAD\pc\models\cdimages\playerped.rpf</playerped>
+				<audio path="EP1_SFX\">TLAD\pc\audio\sfx\EP1_SFX.rpf</audio>
+				<audio_iv path="CUTSCENES\">\pc\audio\Sfx\cutscenes.rpf</audio_iv>
+			</data>
+			<data name="The Ballad of Gay Tony">
+				<cuts>TBoGT\pc\anim\cuts.img</cuts>
+				<cutsprops>
+					<img>pc\anim\cutsprops.img</img>
+					<img>TBoGT\pc\anim\cutsprops.img</img>
+
+					<img>pc\models\cdimages\vehicles.img</img>
+					<img>TBoGT\pc\models\cdimages\vehicles.img</img>
+
+					<img>pc\models\cdimages\componentpeds.img</img>
+					<img>TBoGT\pc\models\cdimages\componentpeds.img</img>
+				</cutsprops>
+				<playerped>TBoGT\pc\models\cdimages\playerped.rpf</playerped>
+				<audio path="EP2_SFX\">TBoGT\pc\audio\sfx\EP2_SFX.rpf</audio>
+				<audio_iv path="CUTSCENES\">\pc\audio\Sfx\cutscenes.rpf</audio_iv>
+			</data>
+		</cut>
+		<map>
+			<data gameDat="common\data\gta.dat" contentDat="" >GTA IV</data>
+			<data gameDat="common\data\gta.dat" contentDat="TLAD\content.dat" >TLAD</data>
+			<data gameDat="common\data\gta.dat" contentDat="TBoGT\content.dat" >TBoGT</data>
+		</map>
+	</animationViewer>
+</tools>

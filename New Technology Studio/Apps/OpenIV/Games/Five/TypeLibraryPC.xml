@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<define class="CFiveAudioContainerPC" tag="default">
+		<if:ext>awc</if:ext>
+	</define>
+
+	<define class="CFivePsoData" tag="default">
+		<if:ext>pso</if:ext>
+		<if:ext>cut</if:ext>
+		<if:ext platform="true">#mt</if:ext>
+		<if:ext platform="true">#mf</if:ext>
+		<if:ext platform="true">#typ</if:ext>
+		<if:ext platform="true">#map</if:ext>
+	</define>
+
+	<define class="CFivePsoData" tag="formats">
+		<if:ext>*BLACK_PSO_HANDLER*</if:ext>
+	</define>
+</library>

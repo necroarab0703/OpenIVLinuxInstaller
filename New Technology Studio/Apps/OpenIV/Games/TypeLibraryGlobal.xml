@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<classes>
+		<define class="CTextClass" tag="default">
+			<if:ext>txt</if:ext>
+			<if:ext>log</if:ext>
+			<if:ext>ini</if:ext>
+			<if:ext>xml</if:ext>
+			<if:ext>json</if:ext>
+			<if:ext>tune</if:ext>
+			<if:ext>bat</if:ext>
+			<if:ext>cmd</if:ext>
+			<if:ext>sps</if:ext>
+			<if:ext>dcl</if:ext>
+		</define>
+		
+		<define class="CCommonClass" tag="Hex">
+
+		</define>
+
+		<define class="CCommonClass" tag="Text">
+			<if:ext>list</if:ext>
+			<if:ext>vdf</if:ext>
+			<if:ext>bnd</if:ext>
+		</define>
+		
+		<define class="CCommonClass" tag="Image">
+			<if:ext>png</if:ext>
+			<if:ext>ico</if:ext>
+			<if:ext>bmp</if:ext>
+			<if:ext>gif</if:ext>
+			<if:ext>jpg</if:ext>
+			<if:ext>jpeg</if:ext>
+		</define>
+
+		<define class="CCommonClass" tag="HyperText">
+			<if:ext>htm</if:ext>
+			<if:ext>html</if:ext>
+			<if:ext>swf</if:ext>
+		</define>
+
+		<define class="CCommonClass" tag="DirectDrawSurface">
+			<if:ext>dds</if:ext>
+		</define>
+		
+		<define class="CCommonClass" tag="oivPackage">
+			<if:ext>oiv</if:ext>
+		</define>
+
+		<define class="CArchiveClass" tag="default">
+			<if:ext>rpf</if:ext>
+		</define>
+
+		<define class="CShellClass" tag="View">
+			<if:ext>bik</if:ext>
+			<if:ext>bk2</if:ext>
+			<if:ext>xls</if:ext>
+			<if:ext>avi</if:ext>
+			<if:ext>wmv</if:ext>
+			<if:ext>mp4</if:ext>
+		</define>
+	</classes>
+	<fileTypes>
+		<define type="ftPackage">
+			<ext>oiv</ext>
+			<ext>zip</ext>
+		</define>
+		
+		<define type="ftArchive">
+			<ext>img</ext>
+			<ext>rpf</ext>
+		</define>
+		
+	</fileTypes>
+</library>

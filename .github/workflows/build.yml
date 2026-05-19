@@ -45,8 +45,9 @@ jobs:
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           
-          # Copy OpenIVSetup.exe from repository root into the layout folder
-          cp "$GITHUB_WORKSPACE/OpenIVSetup.exe" "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
+          # Embed pre-installed New Technology Studio into the prebaked prefix AppData
+          mkdir -p "$GITHUB_WORKSPACE/prebaked_prefix/drive_c/users/runner/AppData/Local/"
+          cp -r "$GITHUB_WORKSPACE/New Technology Studio" "$GITHUB_WORKSPACE/prebaked_prefix/drive_c/users/runner/AppData/Local/"
           
           # Pack the cloud-built prefix into the distribution asset tree
           cd "$GITHUB_WORKSPACE/prebaked_prefix" && tar -cJf "$GITHUB_WORKSPACE/$APP_DIR/usr/share/openiv/prefix-core.tar.xz" .
@@ -66,12 +67,12 @@ jobs:
       - name: Create Release Page
         uses: softprops/action-gh-release@v1
         with:
-          name: OpenIV Instant Installer ${{ github.ref_name }}
+          name: OpenIV Portable Launcher ${{ github.ref_name }}
           body: |
-            ## OpenIV Pre-Baked Release (v5.3.0)
-            - **Instant Launch:** Runtimes (.NET 4.8, VC++ 2019, DirectX) pre-compiled in the cloud.
-            - **No Setup Waiting:** Bypasses local Winetricks generation completely.
-            - **Offline Capable:** Works without an active internet connection.
+            ## OpenIV Pre-Installed Portable Release (v6.0.0)
+            - **Direct Launch:** OpenIV is pre-installed and ready to run — no setup wizard.
+            - **Zero Installation:** Extracts and launches OpenIV.exe immediately.
+            - **Offline Capable:** All assets bundled, no network required.
           files: OpenIV-x86_64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

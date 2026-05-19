@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<FiveAsiManagerWindow Caption='Gerenciador de ASI - $AppName$'/>
+	<RenderUI>
+		<string name="TITLE">$RageGAME_SHORT$ - Gerenciador de ASI</string>
+
+		<string name="RPF_NOTE">Você precisa instalar os plugins ASI Loader e $ModsFolderAsi$ para $RageGAME_SHORT$, caso contrário, o jogo não vai carregar o arquivo RPF modificado.</string>
+		<string name="ONLINE_NOTE">Não jogue $RageGAME_MP$ com RPF modificado, você será banido.</string>
+
+		<string name="INSTALL">Instalar</string>
+		<string name="UPDATE">Atualizar</string>
+		<string name="UNINSTALL">Desinstalar</string>
+
+		<string name="NOT_INSTALLED">NÃO INSTALADO</string>
+		<string name="UPDATE_REQUIRED">REQUER ATUALIZAÇÃO</string>
+		<string name="INSTALLED">INSTALADO</string>
+		<string name="DISABLED">DESATIVADO</string>
+
+		<string name="ASI_LOADER">ASI Loader</string>
+		<string name="ASI_LOADER_DESCRIPTION">ASI Loader é a ferramenta que carrega livrarias personalizadas com a extensão .asi no processo do jogo.</string>
+
+		<string name="OPENIV_ASI">$ModsFolderAsi$</string>
+		<string name="OPENIV_ASI_DESCRIPTION">Este plugin ASI permite que o seu jogo carregue arquivos RPF modificados. Além disso, fornece suporte para a pasta $ModsFolder$.</string>
+
+		<string name="OPEN_CAMERA_ASI">openCamera</string>
+		<string name="OPEN_CAMERA_ASI_DESCRIPTION">Melhora a "Câmera Livre", com limitações no Rockstar Editor.</string>
+
+		<string name="INSTALLATION_FAILED">Falha na instalação</string>
+		<string name="INSTALLATION_FAILED_TEXT">Falha na instalação, reinicie o $AppName$ e tente novamente.</string>
+
+		<string name="UNINSTALL_FAILED">Falha na desinstalação</string>
+		<string name="UNINSTALL_FAILED_TEXT">Falha na desinstalação, reinicie o $AppName$ e tente novamente.</string>
+
+		<string name="MODS_FOLDER_TITLE">Criar pasta $ModsFolder$</string>
+		<string name="MODS_FOLDER_TEXT">A pasta $ModsFolder$ permite que você mantenha todos os arquivos originais do seu jogo seguros, e tenha uma forma mais fácil de alternar entre os arquivos originais e modificados, com apenas um clique.</string>
+		<string name="MODS_FOLDER_EDIT_NOTIFICATION">Mostrar notificação enquanto estiver editando um arquivo fora da pasta $ModsFolder$</string>
+		<string name="MODS_FOLDER_EDIT_MODE_CHECK">Permitir modo de edição apenas para arquivos dentro da pasta $ModsFolder$</string>
+		<string name="MODS_FOLDER_SETTINGS_NOTE">Você pode alterar essas configurações a qualquer momento nas opções do $AppName$.</string>
+		<string name="MODS_FOLDER_LEARN_MORE">Saiba mais sobre a pasta $ModsFolder$</string>
+	</RenderUI>
+</Translation>

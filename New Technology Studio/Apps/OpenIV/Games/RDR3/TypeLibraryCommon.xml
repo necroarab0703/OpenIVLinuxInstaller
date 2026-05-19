@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<define class="CCommonClass" tag="Text">
+		<if:ext>tr</if:ext>
+		<if:ext>mtl</if:ext>
+		<if:ext>xlist</if:ext>
+	</define>
+	
+	<define class="CTextClass" tag="default">
+		<if:ext>meta</if:ext>
+	</define>
+
+	<define class="CAdvancedTextClass" tag="default">
+
+	</define>
+
+	<define class="CCommonClass" tag="Image">
+
+	</define>
+
+	<define class="CArchiveClass" tag="default">
+
+	</define>
+
+	<define class="CIVAudioClass" tag="default">
+
+	</define>
+	
+	<define class="CRageAudio3ContainerClass" tag="default">
+		<if:ext>awc</if:ext>
+	</define>
+	
+	<define class="CCommonClass" tag="nametable">
+		<if:ext>nametable</if:ext>
+	</define>
+</library>

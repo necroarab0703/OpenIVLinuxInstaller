@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!-- To-Do: Make Description -->
+<Manifest version="1">
+	<folder>
+		<default>folders\default.ico</default>
+		<content>folders\content.ico</content>
+		<user>folders\user.ico</user>
+		<temp>folders\temp.ico</temp>
+		<appdata>folders\appdata.ico</appdata>
+		<movies>folders\movies.ico</movies>
+		<sounds>folders\sounds.ico</sounds>
+		<config>folders\config.ico</config>
+		<images>folders\images.ico</images>
+		<maps>folders\maps.ico</maps>
+		<text>folders\text.ico</text>
+		<data>folders\data.ico</data>
+		<models>folders\models.ico</models>
+		<five_mods>folders\five_mods.ico</five_mods>
+		<update>folders\update.ico</update>
+
+		<!-- special -->
+		<white>folders\white.ico</white>
+		<arrow_left>folders\arrow_left.ico</arrow_left>
+
+		<!-- games -->
+		<game_iv>folders\game_iv.ico</game_iv>
+		<game_payne>folders\game_payne.ico</game_payne>
+		<game_five>folders\game_five.ico</game_five>
+		<game_rdr>folders\game_rdr.ico</game_rdr>
+		<game_mcla>folders\game_mcla.ico</game_mcla>
+		<game_rptt>folders\game_rptt.ico</game_rptt>
+		<game_launcher>folders\game_launcher.ico</game_launcher>
+		<game_rdr3>folders\game_rdr3.ico</game_rdr3>
+	</folder>
+
+	<file>
+		<resource>resource.ico</resource>
+		<default>default.ico</default>
+		<view>HasView.ico</view>
+		<if name="config/sounds.dat">audio_metadata.ico</if>
+		<if name="config/speech.dat">audio_metadata.ico</if>
+		<if name="config/categories.dat">audio_metadata.ico</if>
+		<if name="config/curves.dat">audio_metadata.ico</if>
+		<if name="config/dlc_1_curves.dat">audio_metadata.ico</if>
+		<if name="config/dlc_1_game.dat">audio_metadata.ico</if>
+		<if name="config/dlc_1_sounds.dat">audio_metadata.ico</if>
+		<if name="config/dlc_1_speech.dat">audio_metadata.ico</if>
+		<if name="config/dlc_pre-order_curves.dat">audio_metadata.ico</if>
+		<if name="config/dlc_pre-order_game.dat">audio_metadata.ico</if>
+		<if name="config/dlc_pre-order_sounds.dat">audio_metadata.ico</if>
+		<if name="config/effects.dat">audio_metadata.ico</if>
+		<if name="config/game.dat">audio_metadata.ico</if>
+		<if name="config/test_curves.dat">audio_metadata.ico</if>
+		<if name="config/test_game.dat">audio_metadata.ico</if>
+		<if name="config/test_sounds.dat">audio_metadata.ico</if>
+		<if name="config/weapons.dat">audio_metadata.ico</if>
+		<if name="config/anim.dat">audio_metadata.ico</if>
+		<if name="config/dlc_3_sounds.dat">audio_metadata.ico</if>
+		<if name="config/dlc_3_game.dat">audio_metadata.ico</if>
+		<if name="config/dlc_3_curves.dat">audio_metadata.ico</if>
+		<if name="config/dlc_2_speech.dat">audio_metadata.ico</if>
+		<if name="config/dlc_2_sounds.dat">audio_metadata.ico</if>
+		<if name="config/dlc_2_game.dat">audio_metadata.ico</if>
+		<if name="config/dlc_2_curves.dat">audio_metadata.ico</if>
+		<if name="_manifest.ymf">xml.ico</if>
+		<if name="levels.ymt">xml.ico</if>
+		<if name="carcols.ymt">xml.ico</if>
+		<if name="carvariations.ymt">xml.ico</if>
+		<if name="vfxvehicleinfo.ymt">xml.ico</if>
+		<if name="pedpersonality.ymt">xml.ico</if>
+		<if name="gtxd.ymt">xml.ico</if>
+		<if name="credits.ymt">xml.ico</if>
+		<if name="carmodcols.ymt">xml.ico</if>
+		<if name="peds.ymt">xml.ico</if>
+		<if name="playerspecialabilities.ymt">xml.ico</if>
+		<if name="mapdatacullboxes.ymt">xml.ico</if>
+		<if name="popgroups.ymt">xml.ico</if>
+		<if name="physicstasks.ymt">xml.ico</if>
+		<if name="combattasks.ymt">xml.ico</if>
+		<if name="crimetasks.ymt">xml.ico</if>
+		<if name="defaulttasks.ymt">xml.ico</if>
+		<if name="dispatchtuning.ymt">xml.ico</if>
+		<if name="generalevents.ymt">xml.ico</if>
+		<if name="generaltasks.ymt">xml.ico</if>
+		<if name="iksolvers.ymt">xml.ico</if>
+		<if name="movementevents.ymt">xml.ico</if>
+		<if name="pedtargetevaluator.ymt">xml.ico</if>
+		<if name="reactionevents.ymt">xml.ico</if>
+		<if name="relationshiptuning.ymt">xml.ico</if>
+		<if name="soundevents.ymt">xml.ico</if>
+		<if name="weaponevents.ymt">xml.ico</if>
+		<if name="motiontasks.ymt">xml.ico</if>
+		<if name="movementtasks.ymt">xml.ico</if>
+		<if name="playerinfo.ymt">xml.ico</if>
+		<if name="playertargetting.ymt">xml.ico</if>
+		<if name="vehicleaitasks.ymt">xml.ico</if>
+		<if name="vehicletasks.ymt">xml.ico</if>
+		<if name="minimap.ymt">xml.ico</if>
+		<if name="randomevents.ymt">xml.ico</if>
+		<if name="responsetasks.ymt">xml.ico</if>
+		<if name="scenariotasks.ymt">xml.ico</if>
+		<if name="servicetasks.ymt">xml.ico</if>
+		<if name="weapontasks.ymt">xml.ico</if>
+		<if name="situationalclipsets.ymt">xml.ico</if>
+		<if name="wildlifemanager.ymt">xml.ico</if>
+		<if name="tacticalanalysis.ymt">xml.ico</if>
+		<if name="wantedtuning.ymt">xml.ico</if>
+		<if name="shockingevents.ymt">xml.ico</if>	
+	</file>
+
+	<icons>
+		<item file='txt.ico'>
+			<ext>txt</ext>
+			<ext>rbs</ext>
+			<ext>ped</ext>
+			<ext>cmb</ext>
+			<ext>tune</ext>
+			<ext>sps</ext>
+			<ext>dcl</ext>
+			<ext>vdf</ext>
+			<ext>log</ext>
+		</item>
+		<item file='#ad.ico'>
+			<ext>wad</ext>
+			<ext>xad</ext>  
+			<ext>cad</ext>
+			<ext>yad</ext>
+			<ext>wcd</ext>
+			<ext>xcd</ext>  
+			<ext>ccd</ext>
+			<ext>ycd</ext>
+			<ext>ocd</ext>
+		</item>
+		<item file='#hm.ico'>
+			<ext>xhm</ext>
+			<ext>whm</ext>  
+			<ext>chm</ext>
+		</item>
+		<item file='#dr.ico'>
+			<ext>xdr</ext>
+			<ext>wdr</ext>  
+			<ext>cdr</ext>
+			<ext>ydr</ext>
+			<ext>odr</ext>
+		</item>
+		<item file='#ft.ico'>
+			<ext>xft</ext>
+			<ext>wft</ext>  
+			<ext>cft</ext>
+			<ext>yft</ext>
+			<ext>oft</ext>
+		</item>
+		<item file='video.ico'>
+			<ext>bik</ext>
+			<ext>wmv</ext>
+			<ext>mp4</ext>
+		</item>
+		<item file='jpeg.ico'>
+			<ext>jpeg</ext>
+			<ext>jpg</ext>  
+		</item>
+		<item file='#bn.ico'>
+			<ext>xbn</ext>
+			<ext>wbn</ext>  
+			<ext>cbn</ext>
+			<ext>ybn</ext>
+			<ext>obn</ext>
+
+			<ext>xbnd</ext>
+
+			<ext>xtb</ext>
+			<ext>ctb</ext>
+			<ext>otb</ext>
+		</item>
+		<item file='terrain.ico'>
+			<ext>xvd</ext>
+			<ext>cvd</ext>
+		</item>
+		<item file="audio_metadata.ico">
+			<!-- use names by some reason -->
+		</item>
+		<item file='sys\exe.ico'>
+			<ext>exe</ext>
+			<ext>xex</ext>
+			<ext>bat</ext>
+			<ext>cmd</ext>
+		</item>
+		<item file='sys\dll.ico'>
+			<ext>dll</ext>
+			<ext>asi</ext>
+		</item>
+
+		<item file='gxt.ico'>
+			<ext>gxt</ext>
+			<ext>gxt2</ext>
+		</item>
+
+		<item file='xml.ico'>
+			<ext>xml</ext>
+			<ext>meta</ext>
+			<ext>ytyp</ext>
+			<ext>ymap</ext>
+		</item>
+	</icons>
+
+	<extensions>
+		<ext IconFile='ini.ico'>ini</ext>
+		<ext IconFile='img.ico'>img</ext>
+		<ext IconFile='rpf.ico'>rpf</ext>    
+		<ext IconFile='tag.ico'>tag</ext>
+		<ext IconFile='png.ico'>png</ext>
+		<ext IconFile='bmp.ico'>bmp</ext>
+		<ext IconFile='swf.ico'>swf</ext>
+		<ext IconFile='csv.ico'>csv</ext>
+		<ext IconFile='xls.ico'>xls</ext>
+
+		<ext IconFile='rab.ico'>RAGE_SOUND_BANK</ext>
+		<ext IconFile='raf.ico'>RAGE_AUDIO_FILE</ext>
+		<ext IconFile='raf.ico'>awc</ext>
+	</extensions>
+</Manifest>

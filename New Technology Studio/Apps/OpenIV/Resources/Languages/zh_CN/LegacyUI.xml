@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+
+	<!-- Main window -->
+
+	<MainWindow Caption="$AppName$">
+		<FullScreenClose Hint='关闭'/>
+		<btnSwitchMode Caption='编辑模式' hint='切换编辑模式（F6）' showhint='True'/>
+		<btnCloseArchive hint='关闭RPF（Shift + Backspace）' showhint='True'/>
+		<!-- String's -->
+		<AeroWindow LinesCount="80">
+			<StringList>
+				<Item Index='0' Value='名称'/>
+				<Item Index='1' Value='类型'/>
+				<Item Index='2' Value='大小'/>
+				<Item Index='3' Value='属性'/>
+				<Item Index='4' Value='压缩'/>
+				<Item Index='5' Value='编辑模式'/>
+				<Item Index="6" Value=""/>
+				<Item Index="7" Value=""/>
+				<Item Index='8' Value='显示%D个项目'/>
+				<Item Index='9' Value='显示%D / %D个项目'/>
+				<Item Index="10" Value=" 项目"/>
+				<Item Index="11" Value=" B"/>
+				<Item Index="12" Value=" KB"/>
+				<Item Index="13" Value=" MB"/>
+				<Item Index='14' Value='进度...'/>
+				<Item Index='15' Value='当前文件： '/>
+				<Item Index='16' Value='未知'/>
+				<Item Index='17' Value='无打开文件'/>
+				<Item Index='18' Value='加密'/>
+				<Item Index='19' Value='RPF加载中...'/>
+				<Item Index='20' Value='资源 [版本：%D]'/>
+				<Item Index='21' Value='[编辑模式]'/>
+				<Item Index='22' Value='[只读模式]'/>
+				<Item Index="23" Value="LANG: FREE STRING (23)"/>
+				<Item Index="24" Value="你将要启用编辑模式，所有的更改都会被自动保存且不能撤销。"/>
+				<Item Index="25" Value="LANG: FREE STRING (25)"/>
+				<Item Index="26" Value="LANG: FREE STRING (26)"/>
+				<Item Index='27' Value='标签'/>
+				<Item Index='28' Value='添加标签'/>
+				<Item Index='29' Value='新标签：'/>
+				<Item Index='30' Value='没有选中的项目'/>
+				<Item Index='31' Value='已选中：%D'/>
+				<Item Index='32' Value='全屏模式（F11）'/>
+				<Item Index='33' Value='窗口模式（F11）'/>
+				<Item Index='34' Value='选择文件以预览。'/>
+				<Item Index='35' Value='无预览数据。'/>
+				<Item Index='36' Value='版本：%S'/>
+				<Item Index='37' Value='退出 $AppName$'/>
+				<Item Index='38' Value='$AppName$ 选项'/>
+				<Item Index='39' Value='关闭文件'/>
+				<Item Index='40' Value='定住 Pin'/>
+				<Item Index='41' Value='从列表中移除'/>
+				<Item Index='42' Value='最近文件'/>
+				<Item Index='43' Value='外部应用程序运行中...'/>
+				<Item Index='44' Value='确认文件变更'/>
+				<Item Index='45' Value='文件«%S»已被改变。在RPF中更新变化？'/>
+				<Item Index='46' Value='位置'/>
+				<Item Index='47' Value='建构Build'/>
+				<Item Index='48' Value='这个RPF是空的。'/>
+				<Item Index='49' Value='这个目录是空的。'/>
+				<Item Index='50' Value='无项目符合搜索条件。'/>
+				<Item Index='51' Value='在Windows资源管理器中打开目录'/>
+				<Item Index='52' Value='在Windows资源管理器中查找'/>
+				<Item Index='53' Value='打开文件位置'/>
+				<Item Index='54' Value='$AppName$ - 打开位置'/>
+				<Item Index='55' Value='$AppName$无法打开该RPF的位置。'/>
+				<Item Index='56' Value='YouTube频道'/>
+				<Item Index='57' Value='视频教程'/>
+				<Item Index='58' Value='很小 (0 - 10 KB)'/>
+				<Item Index='59' Value='小 (10 - 100 KB)'/>
+				<Item Index='60' Value='中 (100 KB - 1 MB)'/>
+				<Item Index='61' Value='大 (1 - 16 MB)'/>
+				<Item Index='62' Value='很大 (16 - 128 MB)'/>
+				<Item Index='63' Value='巨大 (> 128 MB)'/>
+				<Item Index='64' Value='目录'/>
+				<Item Index="65" Value="在 %s 中搜索"/>
+				<Item Index="66" Value="$AppName$ - 提示"/>
+				<Item Index="67" Value="你可以在设置中开启这个提示"/>
+				<Item Index="68" Value="复制中..."/>
+				<Item Index="69" Value="$AppName$ - 确认"/>
+				<Item Index="70" Value='对"mods\update\update.rpf"的更改将会被丢失，您确认继续？'/>
+				<Item Index="71" Value='搜索 "%s" 在所有文件中'/>
+				<Item Index="72" Value="您确定要退出 $AppName$?"/>
+			</StringList>
+		</AeroWindow>
+		<!-- Others -->
+		<SearchBox BannerText="搜索"/>
+		<!-- Notification: GTA V (ASI) -->
+		<lbGTAVPluginTitle Caption="为 $RageGAME_SHORT$ 按装插件"/>
+		<lbGTAVPluginText Caption="你需要为 GTA V 安装 ASI Loader 和 OpenIV ASI 插件，否则游戏将不会自动加载 mods 目录里修改过的 RPF 文件。"/>
+		<btnGTAVPluginAction Caption="安装"/>
+		<!-- Notification: copy to mods folder -->
+		<lbNotInModsTitle Caption='"mods" 目录'/>
+		<lbNotInModsText Caption='您正在编辑的 RPF 文件不在"mods" 目录。'/>
+		<lbEditModeDisabledDueToModsFolder Caption='此文件已被禁用编辑功能。\n请拷贝到到 mods 目录，或在设置中更改至允许进行编辑。'/>
+		<btnCopyToMods Caption='复制到"mods"目录'/>
+		<btnShowInMods Caption='查看"mods"目录'/>
+		<btnChangeModsFolderSettings Caption='"mods"目录选项'/>
+		<!-- Notification: update.rpf -->
+		<lbCopyNewUpdateToModsTitle Caption='游戏已更新'/>
+		<lbCopyNewUpdateToMods Caption='"mods" 目录中的 update.rpf 是旧版本的。你需要复制新版本的 update.rpf 到 "mods" 目录， 否则您的游戏将会停止运行。'/>
+		<btnCopyUpdateToMods Caption='复制'/>
+		<!-- Notification: Admin mode -->
+		<lbAdminModeTitle Caption='管理员模式'/>
+		<lbAdminModeText Caption='$AppName$ 当前是用管理员模式运行的。 或许不能正常地直接拖放文件。你可以取消管理员模式再次运行$AppName$'/>
+		<btnAdminModeAction Caption='我该怎么办？'/>
+		<!-- Search tasks -->
+		<taskClearSearchFilter Caption='清空搜索'/>
+	</MainWindow>
+
+	<ActionsModule>
+		<!-- Main Menu -->
+		<mmFile Caption='文件'/>
+		<mmEdit Caption='编辑'/>
+		<mmNew Caption='新的'/>
+		<mmView Caption='查看'/>
+		<mmFavorites Caption='收藏'/>
+		<mmTools Caption='工具'/>
+		<mmHelp Caption='帮助'/>
+		<!-- Main Menu : File -->
+		<mmRecentArchives Caption="最近打开的文件"/>
+		<!-- Main Menu : Edit -->
+		<mmFilter Caption="筛选器"/>
+		<!-- Main Menu : View -->
+		<mmLayout Caption='布局'/>
+		<mmSortBy Caption="分类依据"/>
+		<mmGroupBy Caption='分组依据'/>
+		<mmGoto Caption='前往'/>
+		<!-- Main Menu : View -->
+		<mmvIcon Caption='图标'/>
+		<mmvSmallIcon Caption='小图标'/>
+		<mmvList Caption='列表'/>
+		<mmvDetails Caption='详细信息'/>
+		<mmvTile Caption='平铺'/>
+		<!-- Main Menu : Help -->
+		<!-- Path menu -->
+		<PMenu0 Caption='将地址复制为文本'/>
+		<!-- File Action's -->
+		<actCreateArchive Caption="新建 RPF..." Hint="建立新的 RPF 文件"/>
+		<actOpenGameFolder Caption="打开游戏目录" Hint="打开游戏目录"/>
+		<actOpenArchive Caption="打开 RPF..." Hint="打开已存在的 RPF 文件"/>
+		<actOpenFolder Caption="打开目录..." Hint="打开已存在的目录"/>
+		<actOpenArchiveProperties Caption="RPF 属性" Hint=""/>
+		<actDefragmentation Caption="重建" Hint="重建当前RPF"/>
+		<actEditMode Caption="编辑模式" Hint=""/>
+		<actReadMode Caption="只读模式" Hint=""/>
+		<actCloseAllArchives Caption="关闭所有 RPF" Hint="关闭所有已打开的 RPF 文件"/>
+		<actCloseAllFolders Caption="关闭所有目录" Hint="关闭所有已打开的目录"/>
+		<actCloseArchive Caption="关闭 RPF" Hint="关闭当前 RPF"/>
+		<actExit Caption="退出" Hint="退出"/>
+		<!-- Edit Action's -->
+		<actOpen Caption="打开" Hint="打开当前项目"/>
+		<actEditFile Caption="'编辑" Hint="编辑当前项目"/>
+		<actViewAsHex Caption="以十六进制查看..." Hint="以十六进制查看"/>
+		<actViewAsText Caption="以文本查看..." Hint="以文本查看"/>
+		<actCopyName Caption="复制名称" Hint="复制当前文件的名称"/>
+		<actCopyPath Caption="复制路径" Hint="复制当前文件的地址"/>
+		<actExtract Caption="提取..." Hint="提取文件"/>
+		<actSaveContent Caption='保存内容/导出' Hint='保存文件内容/导出'/>
+		<actSaveRawContent Caption="保存为原始格式" Hint="保存为原始格式"/>
+		<actRename      Caption='重命名' Hint='重命名文件'/>
+		<actAdd         Caption='添加'    Hint='添加新文件'/>
+		<actReplace     Caption='替换' Hint='替换当前文件'/>
+		<actRemove Caption="删除" Hint="删除当前文件"/>
+		<actExtractAll Caption="提取全部..." Hint="提取全部文件"/>
+		<actCopyFileList Caption="复制文件列表" Hint=""/>
+		<actSelectAll Caption="全选" Hint=""/>
+		<actResourceObjectExplorer Caption="资源管理器" Hint=""/>
+		<actShowInWindowsExplorer Caption="在Windows资源管理器中显示" Hint=""/>
+		<actItemAddToFavorites Caption="加入收藏..." Hint=""/>
+		<actCopyToModsFolder Caption='复制到 $ModsFolder$ 目录' Hint=""/>
+		<actShowInModsFolder Caption='在 $ModsFolder$ 目录中查看' Hint=""/>
+		<!-- New menu -->
+		<actMultipleImport Caption="导入 openFormats" Hint="多重导入"/>
+		<actNewFolder Caption="目录" Hint="新建目录"/>
+		<!-- View Action's -->
+		<actDirectoryTree Caption="目录树" Hint="显示或隐藏目录树"/>
+		<actToolBar Caption="工具栏" Hint="显示或隐藏工具栏"/>
+		<actSearchBar Caption="搜索及地址栏" Hint="显示或隐藏搜索及地址栏"/>
+		<actStatusBar Caption="状态栏" Hint="状态栏"/>
+		<actLivePreView Caption="预览窗格" Hint="预览窗格"/>
+		<actMainMenuBar Caption="菜单栏" Hint="菜单栏"/>
+		<!-- Help Action's -->
+		<actHelpVerifyGame Caption="如何验证或还原游戏文件..." Hint=""/>
+		<actSocialMedia Caption="加入 $AppName$ 社区" Hint=""/>
+		<actForums Caption="加入 $AppName$ 讨论" Hint=""/>
+		<actSupportDonate Caption="捐赠 $AppName$" Hint=""/>
+		<actGoToWeb Caption="前往网站..." Hint=""/>
+		<actSendFeedback Caption="发送反馈" Hint=""/>
+		<actReportBug Caption="报告 Bug" Hint=""/>
+		<actWin7ReportTool Caption="记录重现问题的步骤" Hint=""/>
+		<actAbout Caption="关于..." Hint="关于"/>
+		<!-- Groups Action's -->
+		<actCollapseAll Caption="折叠所有组" Hint=""/>
+		<actExpandAll Caption="展开所有组" Hint=""/>
+		<actCollapseGroup Caption="折叠组" Hint=""/>
+		<actExpandGroup Caption="展开组" Hint=""/>
+		<!-- Tools Action's -->
+		<actConfig Caption="选项..." Hint="选项"/>
+		<!-- GoTo Action's -->
+		<actGoBack Caption="返回" Hint=""/>
+		<actGoForward Caption="前进" Hint=""/>
+		<actGoUP Caption="向上一级" Hint=""/>
+		<!-- Favorites -->
+		<actAddToFavorites Caption="加入收藏..." Hint=""/>
+		<actOrganizeFavorites Caption="管理收藏..." Hint=""/>
+		<!-- Filter -->
+		<actFilterByName  Caption='以名称过滤' Hint=''/>
+		<actFilterByType  Caption='以类型过滤' Hint=''/>
+		<actFilterOnlyThis Caption='仅显示当前文件' Hint=''/>
+		<!-- Tree -->
+		<actTreeCopyName Caption="复制名称" Hint=""/>
+		<actTreeCopyPath Caption="复制路径" Hint=""/>
+		<actTreeShowInWindowsExplorer Caption="在 Windows 资源管理器中展示" Hint=""/>
+		<actTreeCloseArchive Caption="关闭档案" Hint=""/>
+		<actTreeCopyToModsFolder Caption='复制到 $ModsFolder$ 目录' Hint=""/>
+		<actTreeShowInModsFolder Caption='在 $ModsFolder$ 目录中展示' Hint=""/>
+		<actTreeCollapseThis Caption='收起这个' Hint=""/>
+		<actTreeCollapseAll Caption='收起全部' Hint=""/>
+		<!-- Strings -->
+		<Strings SetCount="100">
+			<Lines>
+				<Item Index='00' Value='目标文件夹：'/>
+				<Item Index='01' Value='预览'/>
+				<Item Index='02' Value='无打开文件'/>
+				<Item Index='03' Value='(无)'/>
+				<Item Index='04' Value='选择新 RPF 的类型：'/>
+				<Item Index='05' Value='线性'/>
+				<Item Index='06' Value='分层'/>
+				<Item Index='07' Value='无名称'/>
+				<Item Index='08' Value='添加标签'/>
+				<Item Index='09' Value='删除'/>
+				<Item Index='10' Value='所有标签'/>
+				<Item Index='11' Value='$AppName$ - 重命名文件'/>
+				<Item Index='12' Value='新名称：'/>
+				<Item Index='13' Value='新建文件夹'/>
+				<Item Index='14' Value='新文件夹：'/>
+				<Item Index='15' Value='$RageGAME_SHORT$未找到。\n请在 $AppName$ 选项中为$RageGAME_SHORT$ 指定正确的位置。'/>
+				<Item Index='16' Value='$AppName$ - 确认重建 RPF'/>
+				<Item Index='17' Value='你确定要重建RPF«%S»吗？\n此操作可能需要几分钟。'/>
+				<Item Index='18' Value='打开内容'/>
+				<Item Index='19' Value='建立新的%S'/>
+				<Item Index='20' Value='输入名称：'/>
+				<Item Index='21' Value='$AppName$ - 未实现的功能'/>
+				<Item Index='22' Value='你尝试使用以下功能：%S\n在当前$AppName$中该功能尚未实现。请在下一版本中再次尝试。'/>
+				<Item Index='23' Value='$AppName$ - 重建RPF '/>
+				<Item Index='24' Value="你不能重建空的RPF。"/>
+				<Item Index='25' Value='已有文件使用了此名称，请使用另一个名称。'/>
+				<Item Index='26' Value='$AppName$ - 添加新标签'/>
+				<Item Index='27' Value='输入新标签:'/>
+				<Item Index='28' Value='导出至 %S'/>
+				<Item Index='29' Value='文件被加密，请安装未被加密版本的游戏。'/>
+				<Item Index='30' Value='$AppName$ - 文件不存在'/>
+				<Item Index='31' Value='打开文件错误：%S\n文件不存在。'/>
+				<Item Index='32' Value='版本：%D'/>
+				<Item Index='33' Value="$AppName$尚无法为$RageGAME_SHORT$创建RPF。\n请稍后再试。"/>
+				<Item Index='34' Value="打开文件于"/>
+				<Item Index='35' Value="%s 于 %s"/>
+				<Item Index='36' Value="%s - %s中的搜索结果"/>
+				<Item Index='37' Value="%s - %s (%s)中的搜索结果"/>
+				<Item Index='38' Value="过滤器"/>
+				<Item Index='39' Value="$AppName$ - 错误"/>
+				<Item Index='40' Value="无法提取文件。"/>
+				<Item Index='41' Value="无法添加文件。"/>
+				<Item Index='42' Value="无法创建文件夹。"/>
+				<Item Index='43' Value="无法删除文件。"/>
+				<Item Index='44' Value="无法替换文件。"/>
+				<Item Index='45' Value="无法建立新文件。"/>
+				<Item Index="46" Value="无效字符"/>
+				<Item Index="47" Value="重名"/>
+				<Item Index="48" Value="已经有一个具有相同名称的文件夹名称。"/>
+				<Item Index="49" Value="选择目录"/>
+				<Item Index="50" Value="删除文件"/>
+				<Item Index="51" Value="你确定是否永久删除这个文件?"/>
+				<Item Index="52" Value="删除文件夹"/>
+				<Item Index="53" Value="你确定是否永久删除这个目录?"/>
+				<Item Index="54" Value="删除多项"/>
+				<Item Index="55" Value="你确定是否永久删除这 %d 个项目?"/>
+				<Item Index="56" Value="升序"/>
+				<Item Index="57" Value="降序"/>
+			</Lines>
+		</Strings>
+	</ActionsModule>
+
+	<EditModeHelpWindow Caption="编辑模式 - $AppName$">
+		<!-- Label's -->
+		<lbTitle Caption='编辑模式'/>
+		<lbText Caption='要添加或编辑文件，请切换至编辑模式。\n你可以在 $AppName$ 设置中将编辑模式设为默认。'/>
+		<lbInfo Caption='"编辑模式"按钮允许你启用编辑模式'/>
+		<!-- Button's -->
+		<btnClose Caption="关闭"/>
+		<cbDoNotShow Caption="不要再次显示此信息"/>
+	</EditModeHelpWindow>
+
+	<AdminModeWindow Caption="管理员模式 - $AppName$">
+		<lbText Caption="$AppName$ 不需要管理员模式可以完美运行.。而且用管理员运行 $AppName$ 会导致一些拖放文件的功能不能正常工作。最有可能的是, 你用管理员运行$AppName$是因为你的游戏装在系统文件夹(例如 C:\Program Files\...) ，而普通用户帐号没有此文件夹的写入权限。\n\n那么你可以使用本工具设置游戏安装目录的读写权限并取消管理员运行 $AppName$。"/>
+		<btnSetPermissions Caption="设置权限"/>
+		<btnClose Caption="关闭"/>
+		<AeroWindow LinesCount="5">
+			<StringList>
+				<Item Index="0" Value="错误 - $AppName$"/>
+				<Item Index="1" Value="成功.\n游戏安装目录读写权限设置成功"/>
+				<Item Index="2" Value="无法设置读写权限.\n错误代码: "/>
+				<Item Index="3" Value="当前目录不存在"/>
+				<Item Index="3" Value="缺失工具. 请重新安装 $AppName$."/>
+			</StringList>
+		</AeroWindow>
+	</AdminModeWindow>
+
+	<!-- Configuration -->
+
+	<ConfigWindow Caption="$AppName$ - 设置">
+		<!-- Languages -->
+		<tabLang Caption='语言'/>
+		<lbLang Caption='软件界面语言：'/>
+		<LnkWebLangs Caption='翻译$AppName$至其他语言'/>
+		<!-- Game -->
+		<tabGame Caption='游戏'/>
+		<gbGamePath Caption='$RageGAME_SHORT$目录'/>
+		<lbCurrentGamePath Caption='当前目录：'/>
+		<tbChangeGame Caption='更改目录' />
+		<ttRageExe Caption='为确保$AppName$正常工作，此目录内应存在以下文件：$RageEncryptionStorage$'/>
+		<!-- General -->
+		<tabMain Caption='总体'/>
+		<cbShowSelectGameDialog Caption='每次打开时都要选择游戏及平台'/> 
+		<lbDefaultGame Caption='选择默认游戏：'/>
+		<lbWorkMode Caption='默认工作模式：'/>
+		<WorkMode>
+			<Items>
+				<Item Index='0' Value='编辑'/>
+				<Item Index='1' Value='只读'/>
+			</Items>
+		</WorkMode>
+		<lbDefTextureFormatGlb Caption="默认贴图文件格式："/>
+		<cbAlwaysOpenArchiveAfterRebuild Caption="重建后总是打开该RPF文件"/>
+		<cbMinimizeAtStartGame Caption='启动游戏时最小化$AppName$'/>
+		<cbInstallUpdatesAutomatically Caption='自动安装更新'/>
+		<cbDisplayDeleteConfirmationDialog Caption="显示确认是否删除的窗口"/>
+		<cbUseRecycleBinInsteadDeleteInContentArchives Caption="对于实际文件，使用回收站而非直接删除"/>
+		<cbCloseArchivesAtStartGame Caption="在开始游戏时关闭所有已经打开的 RPF 文件"/>
+		<cbClearSearchFilterAfterOpeningArchive Caption='在打开新的 RPF 文件时清空搜索词'/>
+		<cbUseAlternativeWayOfAddingFolders Caption='可以直接拖入文件夹。但不会创建该文件夹，只有里面的文件被拖入。'/>
+		<tbFileAssociation Caption="更改文件格式关联"/>
+		<cbDisplayExitConfirmationDialog Caption="在退出时显示是否确认退出的窗口"/>
+		<cbStartWithLocationFromLastSession Caption="打开 $AppName$ 时恢复上次关闭的窗口"/>
+		<cbAlwaysOnExtendedContextMenu Caption="始终在主窗口中打开项目的扩展的上下文菜单"/>
+		<!-- "mods" folder -->
+		<tabModsFolder Caption="$ModsFolder$ 目录"/>
+		<lbModsFolderText Caption="在此页上，您可以更改 $ModsFolder$ 目录的相关设置。"/>
+		<lbModsFolderNote1 Caption="请先启用 $ModsFolderAsi$ 目录."/>
+		<cbShowNotificationWhileEditingArchiveNotInMods Caption='当被编辑的 rpf 文件不在 $ModsFolder$ 目录中时显示提示 '/>
+		<cbAllowEditModeOnlyInModsFolder Caption='只为 $ModsFolder$ 目录开启编辑模式'/>
+		<!-- Tools -->
+		<tabViewers Caption="工具"/>
+		<lbChooseTheme Caption="选择主题"/>
+		<cbAppTheme>
+			<Items>
+				<Item Index="0" Value="亮色"/>
+				<Item Index="1" Value="暗色"/>
+			</Items>
+		</cbAppTheme>
+		<lbRenderBackgroundColor Caption="渲染背景颜色"/>
+		<cbRenderBackgroundColor>
+			<Items>
+				<Item Index='0' Value='默认'/>
+				<Item Index='1' Value='自定义颜色'/>
+			</Items>
+		</cbRenderBackgroundColor>
+		<lbCameraControl Caption="镜头控制方式"/>
+		<cbRenderAntialiasing Caption="启用抗锯齿"/>
+		<lbChooseEditorTheme Caption="选择文本编辑器主题"/>
+		<lbMultichannelAudioPlayback Caption="多声道音频播放"/>
+		<cbMultichannelAudioPlayback>
+			<Items>
+				<Item Index="0" Value="以单声道模式播放多声道音频"/>
+				<Item Index="1" Value="以立体声模式播放多声道音频"/>
+				<Item Index="2" Value="在多声道模式下播放多声道音频"/>
+			</Items>
+		</cbMultichannelAudioPlayback>
+		<lbMultichannelNote Caption="注意：确保您的系统能够播放环绕声，否则您将听不到大部分音频内容。"/>
+		<cbPackageInstallerShowConfirmInstallDialog Caption="每次都在openFormats安装器打开时显示安装确认对话框"/>
+		<!-- openFormats -->
+		<tabFormats Caption="openFormats"/>
+		<lbDefTextureFormat Caption="默认贴图文件格式"/>
+		<cbNotExportTextureToFolder Caption="导出 OTD 文件时不要将贴图至于单独的文件夹中"/>
+		<gbModels Caption="模型导入 (ODR/ODD/OFT)"/>
+		<cbProtectModels Caption="默认启用保护Mesh网格选项（以防之后被导出）"/>
+		<btnSaveShaderInformation Caption="保存 openFormats 着色器信息"/>
+		<!-- Misc + old -->
+		<btnClose Caption='关闭'/>
+		<actAppAdd  Caption='添加'/>
+		<actAppEdit Caption='编辑'/>
+		<actAppDel  Caption='删除'/>
+		<LnkWebApps Caption='为$RageGAME_SHORT$下载更多工具'/>
+		<!-- String's -->
+		<AeroWindow LinesCount="10">
+			<StringList>
+				<Item Index='0' Value='选择文件夹：'/>
+				<Item Index='1' Value='可用语言'/>
+				<Item Index='2' Value='$AppName$ - 警告'/>
+				<Item Index='3' Value='你需要重新启动$AppName$以应用更改。'/>
+				<Item Index="4" Value="旧版本语言"/>
+			</StringList>
+		</AeroWindow>
+	</ConfigWindow>
+
+	<ConfigAssociationWindow Caption="$AppName$ - 关联">
+		<lbTitle Caption="将一个文件类型与 $AppName$ 关联"/>
+		<FileTypes>
+			<Columns>
+				<Item Index="0" Caption=""/>
+				<Item Index='1' Caption='类型'/>
+				<Item Index='2' Caption='描述'/>
+				<Item Index='3' Caption='支持的游戏'/>
+			</Columns>
+			<Groups>
+				<Item Index='0' Header='RPF 文件'/>
+				<Item Index='1' Header='档案'/>
+				<Item Index='2' Header='资源'/>
+			</Groups>
+		</FileTypes>
+		<btnApply Caption='应用'/>
+		<btnCancel Caption='取消'/>
+		<AeroWindow LinesCount="0">
+			<StringList>
+				<Item Index="0" Value=""/>
+			</StringList>
+		</AeroWindow>
+	</ConfigAssociationWindow>
+
+	<!-- EULA Window -->
+
+	<EULAWindow Caption="最终用户许可协议 - $AppName$">
+		<btnClose Caption="关闭"/>
+	</EULAWindow>
+</Translation>

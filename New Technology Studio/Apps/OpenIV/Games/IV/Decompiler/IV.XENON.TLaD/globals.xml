@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- Don't edit this file manual, use OpenIV!!! -->
+
+<!--
+stUnknown
+stVoid
+stStructure
+stInteger
+stPointer
+stString
+stChar
+stFloat
+stVector
+-->
+
+<variables>
+
+ <item index="10911">
+  <name>g_labelPlayerStatMissionName</name>
+  <type>stString</type>
+ </item>
+
+ <item index="11056">
+  <name>g_bBuddyBackupNextTimeCreatedWillBeCustom</name>
+  <type>stBoolean</type>
+ </item>
+
+ <item index="11017">
+  <name>g_bBuddyBackupMissionPassed</name>
+  <type>stBoolean</type>
+ </item>
+
+ <item index="11019">
+  <name>g_bBuddyBackupMissionFailed</name>
+  <type>stBoolean</type>
+ </item>
+
+ <item index="11018">
+  <name>g_bBuddyBackupProceduralMissionPassed</name>
+  <type>stBoolean</type>
+ </item>
+
+</variables>
