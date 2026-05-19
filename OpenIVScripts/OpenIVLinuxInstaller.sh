@@ -85,6 +85,13 @@ ensure_prefix() {
     if [ ! -d "$PREFIX_DIR/drive_c" ]; then log_err "drive_c not created"; exit 3; fi
     log_ok "Prefix created"
 
+    log_step "Injecting system interface fonts …"
+    mkdir -p "$PREFIX_DIR/drive_c/windows/Fonts"
+    if [ -n "$APPDIR" ] && [ -d "$APPDIR/usr/share/openiv/fonts" ]; then
+        cp "$APPDIR/usr/share/openiv/fonts/"*.ttf "$PREFIX_DIR/drive_c/windows/Fonts/" 2>/dev/null
+        log_ok "Fonts injected"
+    fi
+
     ensure_winetricks
 
     log_step "Setting Windows 10 …"

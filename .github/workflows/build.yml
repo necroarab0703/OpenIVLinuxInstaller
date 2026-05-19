@@ -41,6 +41,10 @@ jobs:
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
+
+          mkdir -p "$APP_DIR/usr/share/openiv/fonts"
+          wget -q "https://github.com/webpro/corefonts/raw/master/arial.ttf" -O "$APP_DIR/usr/share/openiv/fonts/Arial.ttf"
+          wget -q "https://github.com/webpro/corefonts/raw/master/tahoma.ttf" -O "$APP_DIR/usr/share/openiv/fonts/Tahoma.ttf"
           
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
@@ -55,9 +59,10 @@ jobs:
         with:
           name: OpenIV Linux Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer v5.0.4
+            ## OpenIV Linux Installer v5.0.7
             - Bundles portable Wine 11.9 staging (native x86/32-bit).
-            - Pre-bundled OpenIVSetup.exe — no runtime download needed.
+            - Pre-bundled OpenIVSetup.exe and TrueType fonts (Arial, Tahoma).
+            - Injects fonts at runtime to fix invisible text rendering.
             - Dynamically builds the 32-bit compatibility prefix locally on first launch.
           files: OpenIV-x86_64.AppImage
         env:

@@ -59,6 +59,18 @@ else
     echo "    OpenIVSetup.exe: not found (will be downloaded by CI at build time)"
 fi
 
+# Bundled fonts
+FONTS_DIR="$APP_DIR/usr/share/openiv/fonts"
+mkdir -p "$FONTS_DIR"
+for font in arial.ttf tahoma.ttf; do
+    if [ -f "/usr/share/fonts/truetype/msttcorefonts/$font" ]; then
+        cp "/usr/share/fonts/truetype/msttcorefonts/$font" "$FONTS_DIR/"
+    elif [ -f "/usr/share/fonts/truetype/liberation/${font/ttf/otf}" ]; then
+        cp "/usr/share/fonts/truetype/liberation/${font/ttf/otf}" "$FONTS_DIR/"
+    fi
+done
+echo "    Fonts: $(ls "$FONTS_DIR" 2>/dev/null | wc -l) files"
+
 # Portable Wine binaries
 WINE_SRC="$BUILD_DIR/prefix-builder/wine"
 if [ ! -d "$WINE_SRC" ]; then
