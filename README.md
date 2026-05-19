@@ -21,7 +21,7 @@ Standalone mode downloads a portable Wine runtime on first run (10-20 min for .N
 
 ### One-liner
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/necroarab0703/OpenIVLinuxInstaller/main/OpenIVScripts/OpenIVLinuxInstaller.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/necroarab/OpenIVLinuxInstaller/main/OpenIVScripts/OpenIVLinuxInstaller.sh)
 ```
 
 ## Architecture
