@@ -86,7 +86,7 @@ ensure_prefix() {
 verify_installation() {
     log_header "Verification"
 
-    local target="$PREFIX_DIR/drive_c/users/$USER/AppData/Local/New Technology Studio/OpenIV.exe"
+    local target="$PREFIX_DIR/drive_c/users/$USER/AppData/Local/New Technology Studio/Apps/OpenIV/OpenIV.exe"
     if [ -f "$target" ]; then
         OPENIV_EXE="$target"
         log_ok "Found: $target"
@@ -94,7 +94,7 @@ verify_installation() {
     fi
 
     local found
-    found=$(find "$PREFIX_DIR/drive_c" -maxdepth 5 -name "OpenIV.exe" -type f 2>/dev/null | head -1 || true)
+    found=$(find "$PREFIX_DIR/drive_c" -maxdepth 6 -name "OpenIV.exe" -type f 2>/dev/null | head -1 || true)
     if [ -n "$found" ]; then OPENIV_EXE="$found"; log_ok "Found: $found"; return 0; fi
 
     log_warn "OpenIV executable not found"
@@ -191,6 +191,16 @@ main() {
     mkdir -p "$PREFIX_DIR"
 
     ensure_prefix
+
+    # Dynamic session mapping: move assets from cloud (runner) to local ($USER)
+    CLOUD_USER_PATH="$PREFIX_DIR/drive_c/users/runner/AppData/Local/New Technology Studio"
+    LOCAL_USER_PATH="$PREFIX_DIR/drive_c/users/$USER/AppData/Local"
+    if [ -d "$CLOUD_USER_PATH" ]; then
+        log_step "Mapping cloud profile assets to local session ($USER) …"
+        mkdir -p "$LOCAL_USER_PATH"
+        mv "$CLOUD_USER_PATH" "$LOCAL_USER_PATH/"
+        log_ok "Profile mapped successfully."
+    fi
 
     if verify_installation; then
         create_launchers
