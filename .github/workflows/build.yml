@@ -37,8 +37,9 @@ jobs:
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           
-          # Find OpenIVSetup.exe anywhere in the workspace and copy it to the distribution folder
-          find . -name "OpenIVSetup.exe" -exec cp {} "$APP_DIR/usr/share/openiv/" \; 2>/dev/null || true
+          # Download official OpenIVSetup.exe directly into the internal AppImage distribution folder
+          curl -L "https://raw.githubusercontent.com/NecroArab/OpenIVLinuxInstaller/main/OpenIVSetup.exe" -o "$APP_DIR/usr/share/openiv/OpenIVSetup.exe" || \
+          curl -L "https://web.archive.org/web/20210720182410if_/http://openiv.com/files/OpenIVSetup.exe" -o "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
           
           # Fetch Kron4ek 32-bit Wine staging environment
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
