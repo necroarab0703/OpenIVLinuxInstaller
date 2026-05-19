@@ -45,16 +45,25 @@ jobs:
       - name: Download OpenIVSetup.exe (CI)
         run: |
           mkdir -p build
-          # --insecure / --no-check-certificate is required because openiv.com
-          # serves an expired SSL certificate as of 2026.  This is a build-time
-          # step only — the final AppImage runs fully offline.  The SHA256
-          # verification below mitigates the risk of a MITM delivering a
-          # tampered binary despite the SSL bypass.
-          curl -k -fsSL "https://openiv.com/webiv/guest.php?get=0" -o build/OpenIVSetup.exe 2>/dev/null || \
-          wget --no-check-certificate -q "https://openiv.com/webiv/guest.php?get=0" -O build/OpenIVSetup.exe || {
-            echo "::error::Failed to download OpenIVSetup.exe from openiv.com"
+          # Download from the GitHub release mirror (archived copy of the official
+          # OpenIVSetup.exe).  openiv.com's direct endpoint is unstable and serves
+          # an error page instead of the binary.  The SHA256 verification below
+          # guarantees integrity regardless of the transport.
+          MIRROR_URL="https://github.com/NecroArab/OpenIVLinuxInstaller/releases/download/v4.1.0/OpenIVSetup.exe"
+          if command -v curl >/dev/null 2>&1; then
+            curl -fsSL "$MIRROR_URL" -o build/OpenIVSetup.exe 2>/dev/null || {
+              echo "::error::Failed to download OpenIVSetup.exe from mirror"
+              exit 1
+            }
+          elif command -v wget >/dev/null 2>&1; then
+            wget -q "$MIRROR_URL" -O build/OpenIVSetup.exe 2>/dev/null || {
+              echo "::error::Failed to download OpenIVSetup.exe from mirror"
+              exit 1
+            }
+          else
+            echo "::error::Neither curl nor wget available"
             exit 1
-          }
+          fi
           echo "OpenIVSetup.exe size: $(du -h build/OpenIVSetup.exe | cut -f1)"
 
       - name: Verify OpenIVSetup.exe SHA256
