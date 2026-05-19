@@ -59,20 +59,15 @@ jobs:
 
       - name: Verify OpenIVSetup.exe SHA256
         run: |
-          ACTUAL_SHA256=$(sha256sum build/OpenIVSetup.exe | cut -d' ' -f1)
-          echo "Computed SHA256: $ACTUAL_SHA256"
-          # Maintainer: replace this with the known-good hash for the current
-          # OpenIVSetup.exe version.  If the hash does not match, set
-          # OPENIV_EXPECTED_SHA256 in the CI variable or workflow dispatch.
-          # When unset the check logs a warning instead of failing.
-          if [ -n "${OPENIV_EXPECTED_SHA256:-}" ]; then
-            if [ "$ACTUAL_SHA256" != "$OPENIV_EXPECTED_SHA256" ]; then
-              echo "::error::SHA256 mismatch: expected $OPENIV_EXPECTED_SHA256, got $ACTUAL_SHA256"
-              exit 1
-            fi
-            echo "SHA256 verification passed"
+          EXPECTED="bb476bef066592e17b65ac5d12306ee55fc33065402bd3be3591cf5f04cdf6e6"
+          ACTUAL=$(sha256sum build/OpenIVSetup.exe | cut -d' ' -f1)
+          echo "Expected SHA256: $EXPECTED"
+          echo "Actual   SHA256: $ACTUAL"
+          if [ "$ACTUAL" = "$EXPECTED" ]; then
+            echo "SHA256 verification passed — binary is authentic"
           else
-            echo "::warning::OPENIV_EXPECTED_SHA256 not set — skipping strict verification"
+            echo "::error::SHA256 mismatch — downloaded binary is corrupted or tampered"
+            exit 3
           fi
 
       - name: Setup AppDir
