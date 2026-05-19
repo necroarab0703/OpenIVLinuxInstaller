@@ -27,15 +27,18 @@ jobs:
 
       - name: Setup AppDir Structure
         run: |
+          mkdir -p build
           APP_DIR="build/openiv-installer.AppDir"
           mkdir -p "$APP_DIR/usr/share/openiv/wine" "$APP_DIR/usr/share/applications"
           
-          # Copy main installer components
+          # Copy installer scripts and configurations
           cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
-          cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
+          
+          # Flexibly look for OpenIVSetup.exe in root, AppImage, or build folder
+          cp OpenIVSetup.exe "$APP_DIR/usr/share/openiv/" 2>/dev/null || cp AppImage/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/" 2>/dev/null || cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
           
           # Fetch Kron4ek 32-bit Wine staging environment
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
