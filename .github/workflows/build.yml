@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update -qq
-          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils wine32 wine64 cabextract
+          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils wine32 wine64 cabextract xvfb
 
       - name: Pre-bake Wine Prefix with Winetricks
         run: |
@@ -29,10 +29,10 @@ jobs:
           wget -q https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /tmp/winetricks
           chmod +x /tmp/winetricks
           
-          # Install the massive runtimes on the cloud server
-          /tmp/winetricks -q dotnet48
-          /tmp/winetricks -q vcrun2019
-          /tmp/winetricks -q d3dx11_43
+          # Install the massive runtimes on the cloud server inside a headless virtual frame buffer
+          xvfb-run -a /tmp/winetricks -q dotnet48
+          xvfb-run -a /tmp/winetricks -q vcrun2019
+          xvfb-run -a /tmp/winetricks -q d3dx11_43
 
       - name: Setup AppDir Structure
         run: |
