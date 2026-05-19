@@ -17,7 +17,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils libgdk-pixbuf2.0-dev fonts-liberation
+          sudo apt-get install -y -qq wget curl xz-utils tar desktop-file-utils libgdk-pixbuf2.0-dev
 
       - name: Download appimagetool
         run: |
@@ -36,9 +36,9 @@ jobs:
           cp AppImage/openiv.png "$APP_DIR/"
           cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
           
-          # Find and bundle system Liberation fonts dynamically
-          find /usr/share/fonts/truetype/ -name "LiberationSans-Regular.ttf" -exec cp {} "$APP_DIR/usr/share/openiv/fonts/Arial.ttf" \;
-          find /usr/share/fonts/truetype/ -name "LiberationSans-Bold.ttf" -exec cp {} "$APP_DIR/usr/share/openiv/fonts/Tahoma.ttf" \;
+          # Fetch clean font streams natively into the distribution structure
+          curl -L "https://github.com/marlonb/ms-fonts/raw/master/fonts/arial.ttf" -o "$APP_DIR/usr/share/openiv/fonts/Arial.ttf"
+          curl -L "https://github.com/marlonb/ms-fonts/raw/master/fonts/tahoma.ttf" -o "$APP_DIR/usr/share/openiv/fonts/Tahoma.ttf"
           
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
