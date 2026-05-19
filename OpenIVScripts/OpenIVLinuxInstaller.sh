@@ -85,12 +85,24 @@ ensure_prefix() {
     if [ ! -d "$PREFIX_DIR/drive_c" ]; then log_err "drive_c not created"; exit 3; fi
     log_ok "Prefix created"
 
-    log_step "Injecting system interface fonts …"
-    mkdir -p "$PREFIX_DIR/drive_c/windows/Fonts"
-    if [ -n "$APPDIR" ] && [ -d "$APPDIR/usr/share/openiv/fonts" ]; then
-        cp "$APPDIR/usr/share/openiv/fonts/"*.ttf "$PREFIX_DIR/drive_c/windows/Fonts/" 2>/dev/null
-        log_ok "Fonts injected"
-    fi
+    log_step "Injecting system interface fonts dynamically…"
+    FONT_DEST="$PREFIX_DIR/drive_c/windows/Fonts"
+    mkdir -p "$FONT_DEST"
+    SYSTEM_FONTS=(
+        "/usr/share/fonts/TTF/DejaVuSans.ttf"
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+        "/usr/share/fonts/liberation/LiberationSans-Regular.ttf"
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+        "/usr/share/fonts/noto/NotoSans-Regular.ttf"
+    )
+    for font_path in "${SYSTEM_FONTS[@]}"; do
+        if [ -f "$font_path" ]; then
+            cp "$font_path" "$FONT_DEST/Arial.ttf"
+            cp "$font_path" "$FONT_DEST/Tahoma.ttf"
+            log_ok "System font mapped from: $font_path"
+            break
+        fi
+    done
 
     ensure_winetricks
 
