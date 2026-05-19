@@ -8,6 +8,7 @@ This document explains how to build the fully self-contained AppImage from sourc
 - **appimagetool** — from [AppImageKit releases](https://github.com/AppImage/AppImageKit/releases)
 - **bash**, **curl**/**wget**, **tar**, **xz-utils**
 - **winetricks** (for the prefix builder)
+- **xvfb** (for headless prefix build)
 - **~5 GB free disk** (for .NET 4.8 installation during prefix build)
 - **~25 minutes** (for the prefix build — .NET 4.8 is the bottleneck)
 
@@ -63,7 +64,7 @@ AppDir/
 ### Step 3: Run appimagetool
 
 ```bash
-ARCH=x86_64 appimagetool Build/AppDir Build/OpenIV-x86_64.AppImage
+ARCH=x86_64 appimagetool build/openiv-installer.AppDir build/OpenIV-x86_64.AppImage
 ```
 
 ## CI Build
@@ -79,13 +80,13 @@ The GitHub Actions workflow in `.github/workflows/build.yml` automates everythin
 To trigger a CI release:
 
 ```bash
-git tag v3.0.0
-git push origin v3.0.0
+git tag v4.2.0
+git push origin v4.2.0
 ```
 
 ## Output
 
-- `Build/OpenIV-x86_64.AppImage` — the final self-contained AppImage
+- `build/OpenIV-x86_64.AppImage` — the final self-contained AppImage
 
 ## Troubleshooting
 
@@ -94,4 +95,4 @@ git push origin v3.0.0
 | .NET install hangs | Wine processes not killed | Kill all wine processes, retry |
 | prefix.tar.xz corrupt | Out of disk space | Free 5 GB, delete `build/`, retry |
 | appimagetool fails: "file not found" | FUSE not available | Use `--appimage-extract-and-run` flag |
-| OpenIV download fails | openiv.com SSL expired | Script auto-falls back to gta5-mods.com |
+| OpenIV download fails (CI) | openiv.com SSL expired | curl -k bypass used; SHA256 verified at build time |

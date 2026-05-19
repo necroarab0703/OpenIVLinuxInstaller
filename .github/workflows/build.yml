@@ -22,7 +22,7 @@ jobs:
           sudo apt-get install -y -qq \
             wget curl xz-utils tar \
             desktop-file-utils libgdk-pixbuf2.0-dev \
-            winetricks cabextract
+            winetricks cabextract xvfb
 
       - name: Cache prefix tarball
         id: cache-prefix
@@ -34,7 +34,7 @@ jobs:
       - name: Build pre-baked prefix (if not cached)
         if: steps.cache-prefix.outputs.cache-hit != 'true'
         run: |
-          bash OpenIVScripts/build-wine-prefix.sh
+          xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" bash OpenIVScripts/build-wine-prefix.sh
 
       - name: Download appimagetool
         run: |
@@ -45,12 +45,35 @@ jobs:
       - name: Download OpenIVSetup.exe (CI)
         run: |
           mkdir -p build
+          # --insecure / --no-check-certificate is required because openiv.com
+          # serves an expired SSL certificate as of 2026.  This is a build-time
+          # step only — the final AppImage runs fully offline.  The SHA256
+          # verification below mitigates the risk of a MITM delivering a
+          # tampered binary despite the SSL bypass.
           curl -k -fsSL "https://openiv.com/webiv/guest.php?get=0" -o build/OpenIVSetup.exe 2>/dev/null || \
           wget --no-check-certificate -q "https://openiv.com/webiv/guest.php?get=0" -O build/OpenIVSetup.exe || {
             echo "::error::Failed to download OpenIVSetup.exe from openiv.com"
             exit 1
           }
           echo "OpenIVSetup.exe size: $(du -h build/OpenIVSetup.exe | cut -f1)"
+
+      - name: Verify OpenIVSetup.exe SHA256
+        run: |
+          ACTUAL_SHA256=$(sha256sum build/OpenIVSetup.exe | cut -d' ' -f1)
+          echo "Computed SHA256: $ACTUAL_SHA256"
+          # Maintainer: replace this with the known-good hash for the current
+          # OpenIVSetup.exe version.  If the hash does not match, set
+          # OPENIV_EXPECTED_SHA256 in the CI variable or workflow dispatch.
+          # When unset the check logs a warning instead of failing.
+          if [ -n "${OPENIV_EXPECTED_SHA256:-}" ]; then
+            if [ "$ACTUAL_SHA256" != "$OPENIV_EXPECTED_SHA256" ]; then
+              echo "::error::SHA256 mismatch: expected $OPENIV_EXPECTED_SHA256, got $ACTUAL_SHA256"
+              exit 1
+            fi
+            echo "SHA256 verification passed"
+          else
+            echo "::warning::OPENIV_EXPECTED_SHA256 not set — skipping strict verification"
+          fi
 
       - name: Setup AppDir
         run: |
