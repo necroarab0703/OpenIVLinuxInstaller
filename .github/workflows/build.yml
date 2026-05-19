@@ -22,7 +22,7 @@ jobs:
           sudo apt-get install -y -qq \
             wget curl xz-utils tar \
             desktop-file-utils libgdk-pixbuf2.0-dev \
-            winetricks cabextract xvfb
+            winetricks cabextract
 
       - name: Cache prefix tarball
         id: cache-prefix
@@ -34,50 +34,13 @@ jobs:
       - name: Build pre-baked prefix (if not cached)
         if: steps.cache-prefix.outputs.cache-hit != 'true'
         run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" bash OpenIVScripts/build-wine-prefix.sh
+          bash OpenIVScripts/build-wine-prefix.sh
 
       - name: Download appimagetool
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
           chmod +x /tmp/appimagetool
           cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
-
-      - name: Download OpenIVSetup.exe (CI)
-        run: |
-          mkdir -p build
-          # Download from the GitHub release mirror (archived copy of the official
-          # OpenIVSetup.exe).  openiv.com's direct endpoint is unstable and serves
-          # an error page instead of the binary.  The SHA256 verification below
-          # guarantees integrity regardless of the transport.
-          MIRROR_URL="https://github.com/NecroArab/OpenIVLinuxInstaller/releases/download/v4.1.0/OpenIVSetup.exe"
-          if command -v curl >/dev/null 2>&1; then
-            curl -fsSL "$MIRROR_URL" -o build/OpenIVSetup.exe 2>/dev/null || {
-              echo "::error::Failed to download OpenIVSetup.exe from mirror"
-              exit 1
-            }
-          elif command -v wget >/dev/null 2>&1; then
-            wget -q "$MIRROR_URL" -O build/OpenIVSetup.exe 2>/dev/null || {
-              echo "::error::Failed to download OpenIVSetup.exe from mirror"
-              exit 1
-            }
-          else
-            echo "::error::Neither curl nor wget available"
-            exit 1
-          fi
-          echo "OpenIVSetup.exe size: $(du -h build/OpenIVSetup.exe | cut -f1)"
-
-      - name: Verify OpenIVSetup.exe SHA256
-        run: |
-          EXPECTED="bb476bef066592e17b65ac5d12306ee55fc33065402bd3be3591cf5f04cdf6e6"
-          ACTUAL=$(sha256sum build/OpenIVSetup.exe | cut -d' ' -f1)
-          echo "Expected SHA256: $EXPECTED"
-          echo "Actual   SHA256: $ACTUAL"
-          if [ "$ACTUAL" = "$EXPECTED" ]; then
-            echo "SHA256 verification passed — binary is authentic"
-          else
-            echo "::error::SHA256 mismatch — downloaded binary is corrupted or tampered"
-            exit 3
-          fi
 
       - name: Setup AppDir
         run: |
@@ -89,8 +52,6 @@ jobs:
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
-
-          cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
 
           cp build/prefix.tar.xz "$APP_DIR/usr/share/openiv/prefix.tar.xz"
 
@@ -117,16 +78,16 @@ jobs:
           body: |
             ## OpenIV Linux Installer ${{ github.ref_name }}
 
-            **100% offline runtime** — no network required at runtime.
+            **Hybrid model** — Wine + prefix bundled offline; OpenIVSetup.exe downloaded at runtime.
 
             ### Downloads
-            - **AppImage**: `OpenIV-x86_64.AppImage` — fully self-contained, zero-network runtime
+            - **AppImage**: `OpenIV-x86_64.AppImage` — self-contained with Wine + pre-baked prefix
 
             ### AppImage — What's Bundled
             - Portable Wine 11.9 staging (Kron4ek) — ~90 MB compressed
             - Pre-baked Wine prefix with .NET 4.8, VC++ 2019, D3DX11.43, corefonts pre-installed
-            - Official OpenIVSetup.exe — bundled at build time
-            - First-run extraction: **~3 seconds** (vs 20+ minutes with runtime winetricks)
+            - OpenIVSetup.exe downloaded dynamically from gta5-mods.com mirror on first run
+            - Prefix extraction: **~3 seconds**; installer download + setup: **~30 seconds**
 
             ### Usage
             ```bash

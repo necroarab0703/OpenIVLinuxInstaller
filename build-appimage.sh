@@ -7,58 +7,30 @@ BUILD_DIR="$(pwd)/build"
 APP_DIR="$BUILD_DIR/openiv-installer.AppDir"
 OUTPUT="$BUILD_DIR/${APP_NAME}-${ARCH}.AppImage"
 
-# Locate OpenIVSetup.exe — check project root first, then common locations
-OPENIV_SETUP="${OPENIV_SETUP:-}"
-if [ -z "$OPENIV_SETUP" ]; then
-    for candidate in \
-        "$(pwd)/OpenIVSetup.exe" \
-        "/home/necroarab/Projects/OpenIV-Wine/OpenIVSetup.exe" \
-        "/tmp/OpenIVSetup.exe"; do
-        if [ -f "$candidate" ]; then
-            OPENIV_SETUP="$candidate"
-            break
-        fi
-    done
-fi
-
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║              OpenIV AppImage Builder v4                     ║"
+echo "║              OpenIV AppImage Builder v5                     ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 
 # ── Step 1 – Build pre-baked prefix + fetch Wine ─────────────────────────────
-echo "==> [1/5] Building pre-baked Wine prefix …"
+echo "==> [1/4] Building pre-baked Wine prefix …"
 echo "    (run build-wine-prefix.sh; this takes 10-25 minutes on first run)"
 echo ""
 
 bash OpenIVScripts/build-wine-prefix.sh
 
-# ── Step 2 – Verify local OpenIVSetup.exe ─────────────────────────────────────
-echo "==> [2/5] Verifying local OpenIVSetup.exe …"
-
-if [ -z "$OPENIV_SETUP" ] || [ ! -f "$OPENIV_SETUP" ]; then
-    echo "==> ERROR: OpenIVSetup.exe not found."
-    echo "    Place it in the project root as ./OpenIVSetup.exe"
-    echo "    or set OPENIV_SETUP=/path/to/OpenIVSetup.exe"
-    echo "    or use one of the default search paths."
-    exit 1
-fi
-
-INSTALLER_SIZE=$(du -h "$OPENIV_SETUP" | cut -f1)
-echo "    Found: $OPENIV_SETUP ($INSTALLER_SIZE)"
-
-# ── Step 3 – Clean + create AppDir skeleton ──────────────────────────────────
-echo "==> [3/5] Creating AppDir structure …"
+# ── Step 2 – Clean + create AppDir skeleton ──────────────────────────────────
+echo "==> [2/4] Creating AppDir structure …"
 rm -rf "$APP_DIR" "$OUTPUT"
 
 mkdir -p "$APP_DIR/usr/share/openiv/wine"
 mkdir -p "$APP_DIR/usr/share/applications"
 
-# ── Step 4 – Populate AppDir ─────────────────────────────────────────────────
-echo "==> [4/5] Populating AppDir …"
+# ── Step 3 – Populate AppDir ─────────────────────────────────────────────────
+echo "==> [3/4] Populating AppDir …"
 
-# Runtime installer (no longer used at runtime in v4, kept for reference)
+# Runtime installer
 cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/OpenIVLinuxInstaller.sh"
 chmod +x "$APP_DIR/OpenIVLinuxInstaller.sh"
 
@@ -69,10 +41,6 @@ chmod +x "$APP_DIR/AppRun"
 # Desktop entry + icon
 cp AppImage/openiv.desktop "$APP_DIR/openiv.desktop"
 cp AppImage/openiv.png "$APP_DIR/openiv.png"
-
-# Local OpenIVSetup.exe
-cp "$OPENIV_SETUP" "$APP_DIR/usr/share/openiv/OpenIVSetup.exe"
-echo "    OpenIVSetup.exe: $INSTALLER_SIZE"
 
 # Pre-baked prefix tarball
 PREFIX_TARBALL="$BUILD_DIR/prefix.tar.xz"
@@ -94,8 +62,8 @@ fi
 cp -a "$WINE_SRC/." "$APP_DIR/usr/share/openiv/wine/"
 echo "    Wine binaries:  $(du -sh "$APP_DIR/usr/share/openiv/wine" | cut -f1)"
 
-# ── Step 5 – Run appimagetool ────────────────────────────────────────────────
-echo "==> [5/5] Running appimagetool …"
+# ── Step 4 – Run appimagetool ────────────────────────────────────────────────
+echo "==> [4/4] Running appimagetool …"
 echo ""
 
 if command -v appimagetool >/dev/null 2>&1; then
