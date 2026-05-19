@@ -30,13 +30,14 @@ jobs:
           APP_DIR="build/openiv-installer.AppDir"
           mkdir -p "$APP_DIR/usr/share/openiv/wine" "$APP_DIR/usr/share/applications"
           
+          # Copy main installer components
           cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
           cp AppImage/AppRun "$APP_DIR/"
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
           cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
-
           
+          # Fetch Kron4ek 32-bit Wine staging environment
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
           chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
@@ -50,10 +51,10 @@ jobs:
         with:
           name: OpenIV Linux Installer ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer Hybrid Model (v5.1.0)
-            - 100% Self-Contained Font Layer (Fixes invisible text bug natively).
+            ## OpenIV Linux Installer (v5.1.4)
             - Bundles portable Wine 11.9 staging (native x86/32-bit).
-            - Pre-bundled OpenIVSetup.exe — completely offline installation sequence.
+            - Pre-bundled OpenIVSetup.exe installer core.
+            - Uses local runtime system font mapping for interface display.
           files: OpenIV-x86_64.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
