@@ -2,18 +2,15 @@
 ################################################################################
 # OpenIV AppImage AppRun
 #
-# On first run:  deploys portable Wine + installs OpenIV automatically.
-# Subsequent:    launches OpenIV directly.
+# The AppRun exports $APPDIR (set automatically by the AppImage runtime)
+# and then delegates to the bundled installer script.
 #
-# All state lives under $XDG_DATA_HOME/openiv-linux/ ($HOME/.local/share/ by
-# default).  No system packages, no root, no prompts.
+# Because the installer is now fully idempotent and prefix extraction takes
+# only a few seconds, this is a simple passthrough.
 ################################################################################
 set -euo pipefail
 
 HERE="$(dirname "$(readlink -f "$0")")"
 export APPDIR="$HERE"
 
-# Forward everything to the installer script; it is idempotent and will
-# skip already-completed steps.  The installer itself handles the "first
-# run vs. subsequent run" logic internally.
 exec bash "$HERE/OpenIVLinuxInstaller.sh" "$@"

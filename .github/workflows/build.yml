@@ -11,37 +11,77 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
+      # ── Host deps for the build pipeline ──────────────────────────────
+      - name: Install build dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget curl desktop-file-utils libgdk-pixbuf2.0-dev
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            wget curl xz-utils tar \
+            desktop-file-utils libgdk-pixbuf2.0-dev \
+            winetricks cabextract
+
+      # ── Pre-baked Wine prefix  (cached to avoid 25 min rebuild) ───────
+      - name: Cache prefix tarball
+        id: cache-prefix
+        uses: actions/cache@v4
+        with:
+          path: build/prefix.tar.xz
+          key: openiv-prefix-${{ hashFiles('OpenIVScripts/build-wine-prefix.sh') }}
+
+      - name: Build pre-baked prefix (if not cached)
+        if: steps.cache-prefix.outputs.cache-hit != 'true'
+        run: |
+          bash OpenIVScripts/build-wine-prefix.sh
 
       - name: Download appimagetool
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
           chmod +x /tmp/appimagetool
-          cd /tmp
-          ./appimagetool --appimage-extract 2>/dev/null || true
-          echo "appimagetool ready"
+          cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
 
+      # ── Assemble AppDir ───────────────────────────────────────────────
       - name: Setup AppDir
         run: |
-          mkdir -p Build/AppDir
-          cp OpenIVScripts/OpenIVLinuxInstaller.sh Build/AppDir/
-          cp AppImage/AppRun Build/AppDir/
-          cp AppImage/openiv.desktop Build/AppDir/
-          cp AppImage/openiv.png Build/AppDir/
-          chmod +x Build/AppDir/AppRun
+          APP_DIR="Build/AppDir"
+          mkdir -p "$APP_DIR/usr/share/openiv/wine" \
+                   "$APP_DIR/usr/share/applications"
 
+          # Scripts
+          cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
+          cp AppImage/AppRun "$APP_DIR/"
+
+          # Icons / desktop
+          cp AppImage/openiv.desktop "$APP_DIR/"
+          cp AppImage/openiv.png "$APP_DIR/"
+
+          # Pre-baked prefix tarball
+          cp build/prefix.tar.xz "$APP_DIR/usr/share/openiv/prefix.tar.xz"
+
+          # Portable Wine binaries  (re-extract from cache for CI)
+          WINE_CACHE="build/cache/wine-11.9-staging-amd64-wow64.tar.xz"
+          if [ -f "$WINE_CACHE" ]; then
+            tar -xJf "$WINE_CACHE" -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
+          else
+            # Fallback: download a fresh copy for bundling
+            wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-amd64-wow64.tar.xz" \
+              -O /tmp/wine-bundle.tar.xz
+            tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
+          fi
+
+          chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
+
+      # ── Build AppImage ────────────────────────────────────────────────
       - name: Build AppImage
         run: |
           ARCH=x86_64 /tmp/squashfs-root/AppRun Build/AppDir OpenIV-x86_64.AppImage || \
           ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run Build/AppDir OpenIV-x86_64.AppImage
 
+      # ── Create Release ────────────────────────────────────────────────
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -50,21 +90,26 @@ jobs:
             ## OpenIV Linux Installer ${{ github.ref_name }}
 
             ### Downloads
-            - **AppImage**: `OpenIV-x86_64.AppImage` (runs standalone)
-            - **Shell Script**: `OpenIVLinuxInstaller.sh` (from source)
+            - **AppImage (recommended)**: `OpenIV-x86_64.AppImage` — fully self-contained, no network needed
+            - **Shell Script**: `OpenIVLinuxInstaller.sh` — standalone mode (downloads Wine on first run)
+
+            ### AppImage — What's Bundled
+            - Portable Wine 11.9 staging (Kron4ek) — ~90 MB compressed
+            - Pre-baked Wine prefix with .NET 4.8, VC++ 2019, D3DX11.43, corefonts pre-installed
+            - First-run extraction: **~3 seconds** (vs 20+ minutes with runtime winetricks)
 
             ### Usage
             ```bash
-            # AppImage
+            # AppImage (self-contained)
             chmod +x OpenIV-x86_64.AppImage
             ./OpenIV-x86_64.AppImage
 
-            # Shell script
+            # Shell script (downloads Wine on first run)
             chmod +x OpenIVLinuxInstaller.sh
             ./OpenIVLinuxInstaller.sh
             ```
 
-            ### What's New
+            ### Changelog
             See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
           files: |
             OpenIV-x86_64.AppImage
