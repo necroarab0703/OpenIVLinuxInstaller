@@ -21,7 +21,7 @@ WINE_SERVER="$BUNDLED_WINE/bin/wineserver"
 export WINEARCH="win32"
 export WINEPREFIX="$PREFIX_DIR"
 export PATH="$BUNDLED_WINE/bin:$PATH"
-export LD_LIBRARY_PATH="$BUNDLED_WINE/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$BUNDLED_WINE/lib:${LD_LIBRARY_PATH:-}"
 
 WINETRICKS_URL="https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks"
 WINETRICKS_BIN="$BIN_DIR/winetricks"
