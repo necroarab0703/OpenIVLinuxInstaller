@@ -43,8 +43,7 @@ jobs:
           cp build/OpenIVSetup.exe "$APP_DIR/usr/share/openiv/"
 
           mkdir -p "$APP_DIR/usr/share/openiv/fonts"
-          wget -q "https://cdn.jsdelivr.net/gh/google/fonts@main/apache/arimo/Arimo%5Bwght%5D.ttf" -O "$APP_DIR/usr/share/openiv/fonts/Arial.ttf"
-          wget -q "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/notosanstahoma/NotoSansTahoma%5Bwght%5D.ttf" -O "$APP_DIR/usr/share/openiv/fonts/Tahoma.ttf"
+          cp AppImage/fonts/*.ttf "$APP_DIR/usr/share/openiv/fonts/" 2>/dev/null || true
           
           wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
