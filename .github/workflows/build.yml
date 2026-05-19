@@ -53,7 +53,7 @@ jobs:
           
           # Fetch Kron4ek portable Wine execution layer
           cd "$GITHUB_WORKSPACE"
-          wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-x86.tar.xz" -O /tmp/wine-bundle.tar.xz
+          wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-amd64.tar.xz" -O /tmp/wine-bundle.tar.xz
           tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
           chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
 
