@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<RageDrawableWindow Caption='$AppName$ Model Görüntüleyici'>
+		<pmiCopyName Caption='İsmi kopyala'/>
+		<pmiCopyHash Caption='Hash&apos;i kopyala'/>
+		<pmiCopyNameAndHash Caption='İsmi ve hash&apos;i kopyala'/>
+		<pmiHigh Caption='Yüksek'/>
+		<pmiMed Caption='Orta'/>
+		<pmiLow Caption='Düşük'/>
+		<pmiVLow Caption='Çok düşük'/>
+		<miLeft Caption='Sol'/>
+		<miRight Caption='Sağ'/>
+		<miCheckAll Caption='Hepsini işaretle' />
+		<miUncheckAll Caption='Hepsinin işaretini kaldır' />
+		<paneDictionary Caption='Sözlük elemanları'/>
+		<cbMultipleRendering Caption='Birden fazla çizim'/>
+		<AeroWindow LinesCount='1'>
+			<StringList>
+				<Item Index='0' Value='Harici dosyadan yükle'/>
+			</StringList>
+		</AeroWindow>
+	</RageDrawableWindow>
+	<RenderUI>	
+		<!-- help -->
+		<string name="HELP_TITLE">Model Görüntüleyici - yardım</string>		
+		<text name="HELP_TEXT">
+			<![CDATA[Fareyi kullanarak etrafa bakının, aşağıdaki tuşlar ile hareket edin:
+			
+    W - İleri git
+    S - Geri git
+    A - Sola git
+    D - Sağa git
+
+    NumPad 8 - Kamerayı yukarı hareket ettir
+    NumPad 2 - Kamerayı aşağı hareket ettir
+    NumPad 4 - Kamerayı sola hareket ettir
+    NumPad 6 - Kamerayı sağa hareket ettir
+
+    Daha hızlı hareket için SHIFT'i basılı tut
+    Daha yavaş hareket için CTRL'i basılı tut
+    Yakınlaştırmak için fare tekerleğini kullan.
+		   
+Ek doku dosyaları eklemek için bu pencerenin sağ altındaki "[+] Doku ekle" butonuna tıklayın. Dokuyu kaldırmak için ise dokunun yanındaki "[-]" işaretine tıklayın.
+
+Çizim seçeneklerini değiştirmek için sağ taraftaki linkleri veya aşağıdaki tuşları kullanın:
+		   
+    F1 - Bu yardım kutusunu aç/kapat
+    F2 - Daha fazla bilgi göster
+    C - Kamera modunu değiştir
+    F - Kenarlı yüzleri aç/kapat
+    P - Noktaların görüntülenme/kapatı
+    G - Geometriyi aç/kapat
+	L - Detay seviyesini değiştir
+    ESC - Bu görüntüleyici penceresini kapat
+	
+    HUD'u geçici olarak gizlemek için H'yi basılı tutun.
+]]>
+		</text>
+		<string name="CHECK_ALL">Hepsini işaretle</string>
+		<string name="UNCHECK_ALL">Hepsinin işaretini kaldır</string>
+		<string name="MULTIPLE_RENDERING">Birden fazla çizim</string>
+		<string name="BOUND_TYPE">Kenar tipi:</string>
+		<string name="CHILD_COUNT">Alt eleman sayısı:</string>
+	</RenderUI>
+</Translation>

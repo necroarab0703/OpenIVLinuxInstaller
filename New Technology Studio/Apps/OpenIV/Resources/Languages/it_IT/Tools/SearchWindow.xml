@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<SearchWindow Caption='Cerca - $AppName$'>
+		<SearchBox BannerText="Cerca v_54_lesters_txd.ytd"/>
+		<btnGoSearch Caption="Cerca"/>
+		<lbSearchFor Caption="Cerca per:"/>
+		<cbSearchFor>
+			<Items>
+				<Item Index="0" Value='File e cartelle'/>
+				<Item Index="1" Value='Tracce audio'/>
+			</Items>
+		</cbSearchFor>
+		<lbSearchArea Caption="Cerca area:"/>
+		<cbSearchArea>
+			<Items>
+				<Item Index="0" Value='Cerca ovunque'/>
+				<Item Index="1" Value="Cerca solo nella cartella del gioco"/>
+				<Item Index="2" Value='Cerca solo nella cartella $ModsFolder$'/>
+			</Items>
+		</cbSearchArea>
+		<lbAudioSearchNote Caption="I risultati della ricerca potrebbero essere limitati perché non sono stati trovati tutti i nomi delle tracce audio."/>
+		<lbStopHint Caption="Per fermare la ricerca premi ESC"/>
+		<btnExtractResults Caption="Estrai risultati"/>
+		<btnExtractAll Caption="Estrai tutti i file"/>
+		<btnExtractSelected Caption="Estrai file selezionati"/>
+		<btnGoTo Caption="Vai al file"/>
+		<btnOpenItem Caption="Apri"/>
+		<btnExtractItem Caption="Estrai"/>
+		<btnExtractSelectedItems Caption="Estrai file selezionati"/>
+		<btnExtractAllItems Caption="Estrai tutti i file"/>
+		<btnSelectAllItems Caption="Seleziona tutto"/>
+		<btnCopyName Caption="copia nome"/>
+		<btnCopyPathName Caption="Copia percorso"/>
+		<btnSaveContent Caption="Salva conteunto"/>
+		<btnSaveRawContent Caption="Salva contenuto raw"/>
+		<!-- String's -->
+		<AeroWindow LinesCount='15'>
+			<StringList>
+				<Item Index='0' Value='Cerca'/>
+				<Item Index='1' Value='Ferma Ricerca'/>
+				<Item Index='2' Value='Nessun elemento trovato'/>
+				<Item Index='3' Value='(%D elementi trovati)'/>
+				<Item Index='4' Value='Nessun elemento selezionato'/>
+				<Item Index='5' Value='Selezionati: %D'/>
+				<Item Index='6' Value="$AppName$ non puo aprire il file."/>
+				<Item Index='7' Value="Nessun risultato per l'estrazione"/>
+				<Item Index='8' Value="Per favore, ferma la ricerca prima di estrarre."/>
+				<Item Index='9' Value="File: %D, Cartelle: %D"/>
+				<Item Index='10' Value="File: %D, Tracce Audio: %D"/>										  
+			</StringList>
+		</AeroWindow>
+	</SearchWindow>
+</Translation>

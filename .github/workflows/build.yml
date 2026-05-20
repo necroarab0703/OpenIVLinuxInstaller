@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ── Host deps for the build pipeline ──────────────────────────────
+      # Host deps for the build pipeline
       - name: Install build dependencies
         run: |
           sudo apt-get update -qq
@@ -25,26 +25,39 @@ jobs:
             desktop-file-utils libgdk-pixbuf2.0-dev \
             winetricks cabextract
 
-      # ── Pre-baked Wine prefix  (cached to avoid 25 min rebuild) ───────
-      - name: Cache prefix tarball
-        id: cache-prefix
-        uses: actions/cache@v4
-        with:
-          path: build/prefix.tar.xz
-          key: openiv-prefix-${{ hashFiles('OpenIVScripts/build-wine-prefix.sh') }}
-
-      - name: Build pre-baked prefix (if not cached)
-        if: steps.cache-prefix.outputs.cache-hit != 'true'
+      # Pre-bake Wine Prefix with Winetricks + DXVK
+      - name: Pre-bake Wine Prefix with Runtimes
         run: |
-          bash OpenIVScripts/build-wine-prefix.sh
+          export WINEARCH=win32
+          export WINEPREFIX="$GITHUB_WORKSPACE/prebaked_prefix"
+          mkdir -p "$WINEPREFIX"
 
+          wget -q https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /tmp/winetricks
+          chmod +x /tmp/winetricks
+
+          sudo apt-get install -y -qq xvfb
+          xvfb-run -a /tmp/winetricks -q dotnet48
+          xvfb-run -a /tmp/winetricks -q vcrun2019
+          xvfb-run -a /tmp/winetricks -q d3dx11_43
+
+          # Fetch DXVK 2.4 and inject into prefix
+          wget -q https://github.com/doitsujin/dxvk/releases/download/v2.4/dxvk-2.4.tar.gz -O /tmp/dxvk.tar.gz
+          tar -zxf /tmp/dxvk.tar.gz -C /tmp/
+          cp /tmp/dxvk-2.4/x32/d3d11.dll "$WINEPREFIX/drive_c/windows/system32/"
+          cp /tmp/dxvk-2.4/x32/dxgi.dll "$WINEPREFIX/drive_c/windows/system32/"
+
+          # Embed pre-installed New Technology Studio into runner AppData
+          mkdir -p "$WINEPREFIX/drive_c/users/runner/AppData/Local/"
+          cp -r "$GITHUB_WORKSPACE/New Technology Studio" "$WINEPREFIX/drive_c/users/runner/AppData/Local/"
+
+      # Download appimagetool
       - name: Download appimagetool
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
           chmod +x /tmp/appimagetool
           cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
 
-      # ── Assemble AppDir ───────────────────────────────────────────────
+      # Assemble AppDir
       - name: Setup AppDir
         run: |
           APP_DIR="Build/AppDir"
@@ -59,54 +72,43 @@ jobs:
           cp AppImage/openiv.desktop "$APP_DIR/"
           cp AppImage/openiv.png "$APP_DIR/"
 
-          # Pre-baked prefix tarball
-          cp build/prefix.tar.xz "$APP_DIR/usr/share/openiv/prefix.tar.xz"
+          # Pack & copy pre-baked prefix (includes NTS + DXVK + runtimes)
+          cd "$GITHUB_WORKSPACE/prebaked_prefix" && tar -cJf "$GITHUB_WORKSPACE/$APP_DIR/usr/share/openiv/prefix-core.tar.xz" .
 
-          # Portable Wine binaries  (re-extract from cache for CI)
-          WINE_CACHE="build/cache/wine-11.9-staging-amd64-wow64.tar.xz"
-          if [ -f "$WINE_CACHE" ]; then
-            tar -xJf "$WINE_CACHE" -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
-          else
-            # Fallback: download a fresh copy for bundling
-            wget -q "https://github.com/Kron4ek/Wine-Builds/releases/download/11.9/wine-11.9-staging-amd64-wow64.tar.xz" \
-              -O /tmp/wine-bundle.tar.xz
-            tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
-          fi
+          # Portable Wine-GE (high-compatibility runtime with bundled libfreetype, gnutls)
+          wget -q "https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-31/wine-lutris-GE-Proton8-31-x86_64.tar.xz" \
+            -O /tmp/wine-bundle.tar.xz
+          tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
 
           chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
 
-      # ── Build AppImage ────────────────────────────────────────────────
+      # Build AppImage
       - name: Build AppImage
         run: |
           ARCH=x86_64 /tmp/squashfs-root/AppRun Build/AppDir OpenIV-x86_64.AppImage || \
           ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run Build/AppDir OpenIV-x86_64.AppImage
 
-      # ── Create Release ────────────────────────────────────────────────
+      # Create Release
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: OpenIV Linux Installer ${{ github.ref_name }}
+          name: OpenIV Portable Launcher ${{ github.ref_name }}
           body: |
-            ## OpenIV Linux Installer ${{ github.ref_name }}
+            ## OpenIV Self-Contained Portable Release (v7.0.0)
 
             ### Downloads
-            - **AppImage (recommended)**: `OpenIV-x86_64.AppImage` — fully self-contained, no network needed
-            - **Shell Script**: `OpenIVLinuxInstaller.sh` — standalone mode (downloads Wine on first run)
+            - **AppImage**: `OpenIV-x86_64.AppImage` — **100% offline**, zero network at runtime
 
-            ### AppImage — What's Bundled
-            - Portable Wine 11.9 staging (Kron4ek) — ~90 MB compressed
-            - Pre-baked Wine prefix with .NET 4.8, VC++ 2019, D3DX11.43, corefonts pre-installed
-            - First-run extraction: **~3 seconds** (vs 20+ minutes with runtime winetricks)
+            ### What's Bundled Inside the AppImage
+            - Portable Wine-GE (GlitchEggroll) — high-compatibility runtime with libfreetype, gnutls
+            - Pre-baked Wine prefix with .NET 4.8, VC++ 2019, D3DX11.43, **DXVK 2.4** pre-installed
+            - **New Technology Studio** — OpenIV pre-installed and ready to launch, no setup wizard
+            - First-run extraction: **~3 seconds**
 
             ### Usage
             ```bash
-            # AppImage (self-contained)
             chmod +x OpenIV-x86_64.AppImage
             ./OpenIV-x86_64.AppImage
-
-            # Shell script (downloads Wine on first run)
-            chmod +x OpenIVLinuxInstaller.sh
-            ./OpenIVLinuxInstaller.sh
             ```
 
             ### Changelog

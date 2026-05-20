@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<Translation> 
+	<RageFragmentsWindow Caption='$AppName$ Model Görüntüleyici'> 
+		<paneHierarchy Caption='Hiyerarşi'/>
+		<pmiHigh Caption='Yüksek'/>
+		<pmiMed Caption='Orta)'/>
+		<pmiLow Caption='Düşük'/>
+		<pmiVLow Caption='Çok Düşük'/>
+		<miLeft Caption='Sol'/>
+		<miRight Caption='Sağ'/>
+		<AeroWindow LinesCount='1'>
+			<StringList>
+				<Item Index='0' Value='Harici dosyadan yükle'/>
+			</StringList>
+		</AeroWindow>
+	</RageFragmentsWindow>
+	<RenderUI>
+		<string name="TOGGLE_DAMAGED">Hasarlı görüntüle:</string>
+		<string name="HELP_TITLE">Model Görüntüleyici - yardım</string>		
+		<string name="CHECK_ALL">Hepsini işaretle</string>
+		<string name="UNCHECK_ALL">Hepsinin işaretini kaldır</string>
+		<string name="ALSO_HIDE_CHILDREN">Ek olarak alt elemanları gizle</string>
+		<string name="PLAY_FORWARD">İleri oynat</string>
+		<string name="PLAY_BACKWARDS">Geriye oynat</string>
+		<text name="HELP_TEXT">
+			<![CDATA[Fareyi kullanarak etrafa bakının, aşağıdaki tuşlar ile hareket edin:
+			
+    W - İleri git
+    S - Geri git
+    A - Sola git
+    D - Sağa git
+
+    NumPad 8 - Kamerayı yukarı hareket ettir
+    NumPad 2 - Kamerayı aşağı hareket ettir
+    NumPad 4 - Kamerayı sola hareket ettir
+    NumPad 6 - Kamerayı sağa hareket ettir
+
+    Daha hızlı hareket için SHIFT'i basılı tut
+    Daha yavaş hareket için CTRL'i basılı tut
+    Yakınlaştırmak için fare tekerleğini kullan.
+		   
+Ek doku dosyaları eklemek için bu pencerenin sağ altındaki "[+] Doku ekle" butonuna tıklayın. Dokuyu kaldırmak için ise dokunun yanındaki "[-]" işaretine tıklayın.
+
+Çizim seçeneklerini değiştirmek için sağ taraftaki linkleri veya aşağıdaki tuşları kullanın:
+		   
+    F1 - Bu yardım kutusunu aç/kapat
+    F2 - Daha fazla bilgi göster
+    C - Kamera modunu değiştiri
+    F - Kenarlı yüzleri aç/kapat
+    P - Noktaların görüntüle/kapat
+    G - Geometriyi aç/kapat
+	L - Detay seviyesini değiştir
+    ESC - Bu görüntüleyici penceresini kapat
+	
+    HUD'u geçici olarak gizlemek için H'yi basılı tutun.
+]]>
+		</text>				
+	</RenderUI>
+</Translation>

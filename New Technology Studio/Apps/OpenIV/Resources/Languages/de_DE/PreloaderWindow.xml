@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<PreloaderWindow>
+		<WelcomeScreen>
+			<!-- Button's -->
+			<btnClose Caption='Schließen'/>
+			<btnEULANext Caption='Fortsetzen'/>
+			<btnWebNext Caption='Fortsetzen'/>
+			<btnGame Caption='Durchsuchen...' Hint='Ordner auswählen:'/>
+			<btnGameNext Caption='Fortsetzen'/>
+			<btnWindowsNext Caption='Fortsetzen'/>
+			<btnSetPermissions Caption='Berechtigungen setzen'/> 
+			<btnBackupNext Caption='Fortsetzen'/>
+			<btnSocialNext Caption='Fortsetzen'/>
+			<btnSocialYouTube Caption='$AppName$ YouTube - Kanal'/>
+			<btnSocialTwitter Caption='$AppName$ auf Twitter'/>
+			<btnSocial_FB Caption='$AppName$ Facebook - Seite'/>
+			<btnSocial_VK Caption='$AppName$ VK - Seite'/>
+			<!-- Link's -->
+			<LnkWebLangs Caption='$AppName$ in eine andere Sprache überetzen'/>
+			<LnkWebEULA Caption='Die Lizenz hier lesen.'/>
+			<!-- CheckBox's -->
+			<cbAcceptEULA Caption='Ich habe die $AppName$ Lizenzvereinbarung gelesen und stimme ihnen zu.'/>
+			<!-- Strings -->
+			<StringList SetCount='30'>
+				<Lines>
+					<Item Index='00' Value='$AppName$ Nutzungsbedingungen'/>
+					<Item Index='01' Value='Bevor du $AppName$ nutzen kannst, musst du die folgenden Nutzungsbedingungen lesen und ihnen zustimmen.'/>
+					<Item Index='02' Value=''/>
+					<Item Index='03' Value=''/>
+					<Item Index='04' Value='Service kurzzeitig nicht erreichbar.'/>
+					<Item Index='05' Value='$RageGAME$ - Ordner auswählen'/>
+					<Item Index='06' Value='Ohne das Spielverzeichnis zu bestimmen, kann $AppName$ die $RageGAME_SHORT$ Dateien nicht öffnen, weil es nicht genug Informationen hat. Bitte gebe unten den richtigen Installationspfad von $RageGAME$ ein.'/>
+					<Item Index='07' Value='$RageGAME$ Spielverzeichnis:'/>
+					<Item Index='08' Value='Fehler: Dieser Ordner existier nicht.'/>
+					<Item Index='09' Value='Erfolgreich: $AppName$ kann mit diesem Ordner arbeiten.'/>
+					<Item Index='10' Value="Fehler: Dieser Ordner beinhaltet nicht die Datei '$RageEncryptionStorage$'."/>
+					<Item Index='11' Value='Erfolgreich: $RageEncryptionStorage$, Version %s\n$AppName$ kann mit dieser Datei arbeiten.'/>
+					<Item Index='12' Value='Backups'/>
+					<Item Index='13' Value='Vergesse nicht Backups von deinen Originaldateien zu erstellen, bevor du sie bearbeitest.'/>
+					<Item Index='14' Value='Windows 7'/>
+					<Item Index='15' Value='$AppName$ funktioniert am besten auf Microsoft® Windows 7™'/>
+					<Item Index='16' Value='Dein Name:'/>
+					<Item Index='17' Value="Fehler: $AppName$ darf nicht mit diesem Ordner arbeiten.\nFühre $AppName$ mit Administratorrechten aus oder die erforderlichen Berechtigungen setzen."/>
+					<Item Index='18' Value='Werde Teil der $AppName$ - Community'/>
+					<Item Index='19' Value='$AppName$ - Bestätigung'/>
+					<Item Index='20' Value='Der Einstellungsprozess ist noch nicht abgeschlossen.\n Willst du $AppName$ trotzdem beenden?'/>
+					<Item Index='21' Value="Fehler: $AppName$ hat keinen Zugriff um mit der Datei '$RageEncryptionStorage$' zu arbeiten.\nFühre $AppName$ mit Administratorrechten aus."/>		
+					<Item Index='22' Value="Fehler: $RageGAME$ läuft zur Zeit. Bitte schließe das Spiel vor der Benutzung von $AppName$."/>
+					<Item Index='23' Value="Alles erledigt.\nDie Berechtigungen wurden erfolgreich gesetzt."/>
+					<Item Index='24' Value="Berechtigungen konnten nicht gesetzt werden."/>
+					<Item Index='25' Value="Fehler: Der Schlüssel konnte in $RageEncryptionStorage$ nicht gefunden werden."/>
+				</Lines>
+			</StringList>
+		</WelcomeScreen>
+		<UpdateScreen>
+			<!-- Button's -->
+			<btnExit Caption='Beenden'/>
+			<btnInstall Caption='Downloaden und Installieren'/>
+			<!-- Label's -->
+			<lbTitle Caption='$AppName$ Update'/>
+			<lbText Caption='Es ist ein neues Update für $AppName$ verfügbar. Du musst es installieren, bevor du $AppName$ starten kannst.'/>
+			<lbStatus Caption='Downloadgröße: '/>
+			<cbInstallUpdatesAutomatically Caption='Updates automatisch installieren'/>
+			<lbCurrentVersion Caption='Deine Version:'/>		
+			<lbNewVersion Caption='Neue Version:'/>
+			<!-- Strings -->
+			<StringList SetCount='10'>
+				<Lines>
+					<Item Index='0' Value=' MB'/>
+					<Item Index='1' Value='Auf Download vorbereiten...'/>
+					<Item Index='2' Value='Heruntergeladen: %f von %f MB'/>
+					<Item Index='3' Value='Updade wird installiert...'/>
+					<Item Index='4' Value='Fehler beim Update, bitte versuche es später erneut.'/>
+					<Item Index='5' Value='%d.%d.%d (Build %d; Datum %s)'/>							
+					<Item Index='6' Value='Dieses Update enthält Bugfixes und kleinere Verbesserungen.'/>							
+					<Item Index='7' Value='Dieses Update enthält neue Features, Bugfixes, Benutzeroberflächenveränderungen und größere Verbesserungen.'/>
+					<Item Index='8' Value=''/>
+					<Item Index='9' Value=''/>
+				</Lines>
+			</StringList>
+		</UpdateScreen>
+		<ChangeGameScreen>
+			<!-- Button's -->
+			<btnExit Caption='Beenden'/>
+			<btnContinue Caption='Fortsetzen'/>
+			<!-- Strings -->
+			<StringList SetCount='20'>
+				<Lines>
+					<Item Index='00' Value='Schwerwiegender Fehler in der Anwendung'/>
+					<Item Index='01' Value='Du hast $AppName$ im selben Ordner installiert wie "$RageEncryptionStorage$".\nBitte installiere $AppName$ in einem seperaten Ordner.'/>
+					<Item Index='02' Value='$RageGAME$ Ordner verändern'/>
+					<Item Index='03' Value='Etwas ist fehlgeschlagen, bitte verändere das $RageGAME$ - Verzeichnis unten und starte $AppName$ neu.'/>
+					<Item Index='04' Value='Fehler: Der Ordner existiert nicht.'/>
+					<Item Index='05' Value='Erfolgreich: $AppName$ kann mit diesem Ordner arbeiten.'/>
+					<Item Index='06' Value="Fehler: Dieses Verzeichnis beinhaltet nicht die Datei '$RageEncryptionStorage$'."/>
+					<Item Index='07' Value='Erfolgreich: $RageEncryptionStorage$, Version %s\n$AppName$ kann mit dieser Datei arbeiten.'/>
+					<Item Index='08' Value='Durchsuchen'/>
+					<Item Index='09' Value="Fehler: $AppName$ darf nicht mit diesem Ordner arbeiten.\nFühre $AppName$ mit Administratorrechten aus."/>
+					<Item Index='10' Value="Fehler: Der Schlüssel konnte in $RageEncryptionStorage$ nicht gefunden werden."/>
+				</Lines>
+			</StringList>
+		</ChangeGameScreen>
+	</PreloaderWindow>
+</Translation>

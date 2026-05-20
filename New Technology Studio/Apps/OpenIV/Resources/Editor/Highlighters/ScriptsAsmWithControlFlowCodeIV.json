@@ -1,0 +1,237 @@
+{
+   "Highlighter": {
+      "Info": {
+         "General": {
+            "Version": "1.0.0",
+            "Date": "27.05.2016",
+            "Sample": [ "" ]
+         },
+         "Author": {
+            "Name": "OpenIV",
+            "Mail": ""
+         }
+      },
+      "MainRules": {
+         "Attributes": {
+            "Element": "Editor"
+         },
+         "SubRules": {
+            "Range": [
+               {
+                  "Type": "LineComment",
+                  "Attributes": {
+                     "Element": "Comment"
+                  },
+                  "Properties": {
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": "*"
+                  }
+               },
+               {
+                  "Type": "LineComment",
+                  "Attributes": {
+                     "Element": "Comment"
+                  },
+                  "Properties": {
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": ";"
+                  }
+               },
+               {
+                  "Type": "String",
+                  "Attributes": {
+                     "Element": "String"
+                  },
+                  "Properties": {
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": "'",
+                     "Close": "'"
+                  }
+               },
+               {
+                  "Type": "String",
+                  "Attributes": {
+                     "Element": "String"
+                  },
+                  "Properties": {
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": "\"",
+                     "Close": "\""
+                  }
+               },
+               {
+                  "Type": "Number",
+                  "Attributes": {
+                     "Element": "Number"
+                  },
+                  "Properties": {
+                     "CloseOnTerm": true,
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": "#"
+                  }
+               },
+               {
+                  "Type": "Hex",
+                  "Attributes": {
+                     "Element": "Number"
+                  },
+                  "Properties": {
+                     "CloseOnTerm": true,
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": "$"
+                  }
+               },
+               {
+                  "Type": "Number",
+                  "Attributes": {
+                     "Element": "Number"
+                  },
+                  "Properties": {
+                     "CloseOnTerm": true,
+                     "CloseOnEndOfLine": true
+                  },
+                  "TokenRange": {
+                     "Open": "%"
+                  }
+               }
+            ],
+            "KeyList": [
+               {
+                  "Type": "ReservedWord",
+                  "Words": [
+					 "asm",
+					 "while",
+					 "native",
+					 "ret",
+					 "enter",
+					 "if",
+					 "true",
+					 "false",
+					 "call",
+					 "else"
+                  ],
+                  "Attributes": {
+                     "Element": "ReservedWord"
+                  }
+               },
+               {
+                  "Type": "Directive",
+                  "Words": [
+                     "equ_",
+                     "opt_",
+                     "page",
+                     "org_",
+                     "rmb_",
+                     "end"
+                  ],
+                  "Attributes": {
+                     "Element": "Directive"
+                  }
+               }
+            ],
+            "Set": [
+               {
+                  "Type": "Numbers",
+                  "Symbols": "0123456789",
+                  "Attributes": {
+                     "Element": "Number"
+                  }
+               },
+               {
+                  "Type": "Float",
+                  "Symbols": ".0123456789",
+                  "Attributes": {
+                     "Element": "Number"
+                  }
+               }
+            ]
+         }
+      }
+   },
+   "CodeFolding": {
+      "Ranges": [
+         {
+            "Options": {
+               "StringEscapeChar": "\\"
+            },
+            "SkipRegion": [
+               {
+                  "OpenToken": "'",
+                  "CloseToken": "'",
+                  "RegionType": "String"
+               },
+               {
+                  "OpenToken": "\"",
+                  "CloseToken": "\"",
+                  "RegionType": "String"
+               },
+               {
+                  "OpenToken": "//",
+                  "RegionType": "SingleLine"
+               },
+               {
+                  "OpenToken": "/*",
+                  "CloseToken": "*/",
+                  "RegionType": "MultiLine"
+               }
+            ],
+            "FoldRegion": [
+               {
+                  "OpenToken": "{",
+                  "CloseToken": "}"
+               }
+            ]
+         }
+      ]
+   },
+   "MatchingPair": {
+      "Pairs": [
+         {
+            "OpenToken": "(",
+            "CloseToken": ")"
+         },
+         {
+            "OpenToken": "[",
+            "CloseToken": "]"
+         },
+         {
+            "OpenToken": "{",
+            "CloseToken": "}"
+         }
+      ]
+   },
+   "CompletionProposal": {
+      "SkipRegion": [
+         {
+            "OpenToken": "'",
+            "CloseToken": "'",
+            "RegionType": "String"
+         },
+         {
+            "OpenToken": "\"",
+            "CloseToken": "\"",
+            "RegionType": "String"
+         },
+         {
+            "OpenToken": ";",
+            "RegionType": "SingleLine"
+         },
+         {
+            "OpenToken": "*",
+            "RegionType": "SingleLine"
+         }
+      ]
+   }
+}

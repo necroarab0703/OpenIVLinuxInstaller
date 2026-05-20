@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translation>
+	<SearchWindow Caption='Поиск - $AppName$'>
+		<SearchBox BannerText="Поиск"/>
+		<btnGoSearch Caption="Найти"/>
+		<lbSearchFor Caption="Что искать:"/>
+		<cbSearchFor>
+			<Items>
+				<Item Index="0" Value='Файлы и папки'/>
+				<Item Index="1" Value='Звуковые дорожки'/>
+			</Items>
+		</cbSearchFor>
+		<lbSearchArea Caption="Область поиска:"/>
+		<cbSearchArea>
+			<Items>
+				<Item Index="0" Value='Искать везде'/>
+				<Item Index="1" Value="Искать только в папке игры"/>
+				<Item Index="2" Value='Искать только в папке $ModsFolder$'/>
+			</Items>
+		</cbSearchArea>
+		<lbAudioSearchNote Caption="Результаты поиска могут быть не полными, потому что не все имена звуковых дорожек были обнаружены."/>
+		<lbStopHint Caption="Для остановки поиска нажмите ESC"/>
+		<btnExtractResults Caption="Извлечь результаты"/>
+		<btnExtractAll Caption="Извлечь все файлы"/>
+		<btnExtractSelected Caption="Извлечь выбранные файлы"/>
+		<btnGoTo Caption="Перейти к файлу"/>
+		<btnOpenItem Caption="Открыть"/>
+		<btnExtractItem Caption="Извлечь"/>
+		<btnExtractSelectedItems Caption="Извлечь выбранные файлы"/>
+		<btnExtractAllItems Caption="Извлечь все файлы"/>
+		<btnSelectAllItems Caption="Выделить всё"/>
+		<btnCopyName Caption="Копировать имя"/>
+		<btnCopyPathName Caption="Копировать путь"/>
+		<btnSaveContent Caption="Сохранить содержимое"/>
+		<btnSaveRawContent Caption="Save raw content"/>
+		<!-- String's -->
+		<AeroWindow LinesCount='15'>
+			<StringList>
+				<Item Index='0' Value='Найти'/>
+				<Item Index='1' Value='Остановить поиск'/>
+				<Item Index='2' Value='Нет найденных файлов'/>
+				<Item Index='3' Value='Найдено: %D'/>
+				<Item Index='4' Value='Нет выбранных файлов'/>
+				<Item Index='5' Value='Выбрано файлов: %D'/>
+				<Item Index='6' Value="$AppName$ не может открыть файл."/>
+				<Item Index='7' Value="Нет результатов для экспорта."/>
+				<Item Index='8' Value="Остановите поиск для экспорта."/>
+				<Item Index='9' Value="Файлы: %D, Папки: %D"/>
+				<Item Index='10' Value="Файлы: %D, Звуковые дорожки: %D"/>
+			</StringList>
+		</AeroWindow>
+	</SearchWindow>
+</Translation>

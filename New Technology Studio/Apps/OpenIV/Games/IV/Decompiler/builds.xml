@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+ <build hash="$7E204400">
+  <name>Grand Theft Auto IV (PC)</name>
+  <root>IV.PC</root>
+ </build>
+ 
+ <build hash="$2DFAA53F">
+  <name>EfLC: The Lost and Damned (PC)</name>
+  <root>IV.PC</root>
+ </build>
+ 
+ <build hash="$394BA44A">
+  <name>EfLC: The Ballad of Gay Tony (PC)</name>
+  <root>IV.PC</root>
+ </build>
+
+ <build hash='$7DD1E61C'>
+  <name>Grand Theft Auto IV (consoles)</name>
+  <root>IV.XENON</root>
+ </build>
+ 
+ <build hash="$2DCD2195">
+  <name>The Lost and Damned</name>
+  <root>IV.XENON.TLaD</root>
+ </build>
+  
+</root>

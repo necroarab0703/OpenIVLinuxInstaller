@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8"?> 
+<library xmlns:if="http://schemas.openiv.com/type-library/2008/if">
+	<define class="CCommonClass" tag="Text">
+		<if:ext>tr</if:ext>
+		<if:ext>mtl</if:ext>
+		<if:ext>xlist</if:ext>
+		
+		<if:ext>csv</if:ext>
+		<if:ext>ide</if:ext>
+		<if:ext>sc</if:ext>
+		<if:ext>ipl</if:ext>
+	</define>
+	
+	<define class="CTextClass" tag="default">
+		<if:ext>patch</if:ext>
+		<if:ext>meta</if:ext>
+		<if:ext>ugc</if:ext>
+		
+		<if:name>bloodfx.dat</if:name>
+		<if:name>cargrp.dat</if:name>
+		<if:name>decals.dat</if:name>
+		<if:name>decals_cs.dat</if:name>
+		<if:name>entityfx.dat</if:name>
+		<if:name>explosionfx.dat</if:name>
+		<if:name>firefx.dat</if:name>
+		<if:name>hudcolor.dat</if:name>
+		<if:name>liquidfx.dat</if:name>
+		<if:name>material_override_pairs.dat</if:name>
+		<if:name>materialfx.dat</if:name>
+		<if:name>materials.dat</if:name>
+		<if:name>nav.dat</if:name>
+		<if:name>navmeshindexmapping.dat</if:name>
+		<if:name>pedgrp.dat</if:name>
+		<if:name>pedvariations.dat</if:name>
+		<if:name>popcycle.dat</if:name>
+		<if:name>ptxclipregions.dat</if:name>
+		<if:name>relationships.dat</if:name>
+		<if:name>scriptfx.dat</if:name>
+		<if:name>scrollbars.dat</if:name>
+		<if:name>trains1.dat</if:name>
+		<if:name>trains2.dat</if:name>
+		<if:name>trains3.dat</if:name>
+		<if:name>trains4.dat</if:name>
+		<if:name>trains5.dat</if:name>
+		<if:name>trains6.dat</if:name>
+		<if:name>trains7.dat</if:name>
+		<if:name>trains8.dat</if:name>
+		<if:name>trains9.dat</if:name>
+		<if:name>trains10.dat</if:name>
+		<if:name>trains11.dat</if:name>
+		<if:name>trains12.dat</if:name>
+		<if:name>vehicleextras.dat</if:name>
+		<if:name>vfx.dat</if:name>
+		<if:name>visualsettings.dat</if:name>
+		<if:name>water.dat</if:name>
+		<if:name>weaponfx.dat</if:name>
+		<if:name>wheelfx.dat</if:name>
+		<if:name>zonebind.dat</if:name>
+	</define>
+
+	<define class="CCommonClass" tag="Image">
+
+	</define>
+
+	<define class="CArchiveClass" tag="default">
+
+	</define>
+	
+	<define class="CGXT2FileClass" tag="default">
+		<if:ext>gxt2</if:ext>
+	</define>
+	
+	<define class="CIVAudioClass" tag="default">
+
+	</define>
+	
+	<define class="CCommonClass" tag="nametable">
+		<if:ext>nametable</if:ext>
+	</define>
+</library>

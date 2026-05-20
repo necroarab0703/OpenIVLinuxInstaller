@@ -1,10 +1,11 @@
 #!/bin/bash
 ################################################################################
-# OpenIV Linux Installer  –  100% Offline, Zero-Network AppImage Launcher
+# OpenIV Linux Launcher  –  Self-Contained Portable AppImage
 #
 # This script is designed to run from inside a pre-bundled AppImage.  All
-# assets (portable Wine, pre-baked prefix with .NET 4.8, OpenIVSetup.exe)
-# are baked into the AppDir at build time.  Nothing is downloaded at runtime.
+# assets (Wine-GE, pre-baked prefix with .NET 4.8 + DXVK 2.4, New Technology
+# Studio pre-installed) are baked into the AppDir at build time.  Nothing is
+# downloaded at runtime.
 #
 # When executed standalone (no $APPDIR), the script errors immediately and
 # directs the user to use the AppImage.
@@ -31,13 +32,11 @@ PREFIX_DIR="$DATA_DIR/prefix"
 
 # Bundled resource paths (inside the AppImage)
 BUNDLED_WINE_DIR="$APPDIR/usr/share/openiv/wine"
-BUNDLED_PREFIX_TARBALL="$APPDIR/usr/share/openiv/prefix.tar.xz"
-BUNDLED_OPENIV_EXE="$APPDIR/usr/share/openiv/OpenIVSetup.exe"
+BUNDLED_PREFIX_TARBALL="$APPDIR/usr/share/openiv/prefix-core.tar.xz"
 
 # Resolved at runtime
 WINE_DIR=""
 WINE_BINARY=""
-WINE_SERVER=""
 OPENIV_EXE=""
 
 # ── Terminal Colours ───────────────────────────────────────────────────────────
@@ -86,7 +85,6 @@ ensure_wine() {
 
     WINE_DIR="$BUNDLED_WINE_DIR"
     WINE_BINARY="$WINE_DIR/bin/wine"
-    WINE_SERVER="$WINE_DIR/bin/wineserver"
     local ver; ver=$("$WINE_BINARY" --version 2>/dev/null || echo "bundled")
     log_ok "Wine $ver (bundled)"
 }
@@ -120,67 +118,38 @@ ensure_prefix() {
     log_ok "Prefix extracted ($(du -sh "$PREFIX_DIR" | cut -f1))"
 }
 
-# ── 5.  OpenIV Silent Install (from bundled OpenIVSetup.exe) ──────────────────
-install_openiv_silent() {
-    log_header "Installing OpenIV"
-
-    if [ ! -f "$BUNDLED_OPENIV_EXE" ]; then
-        log_err "Bundled OpenIV installer not found at $BUNDLED_OPENIV_EXE"
-        log_err "The AppImage may be corrupted. Please re-download."
-        exit 4
+# ── 5.  Dynamic session mapping ──────────────────────────────────────────────
+map_cloud_profile() {
+    CLOUD_USER_PATH="$PREFIX_DIR/drive_c/users/runner/AppData/Local/New Technology Studio"
+    LOCAL_USER_PATH="$PREFIX_DIR/drive_c/users/$USER/AppData/Local"
+    if [ -d "$CLOUD_USER_PATH" ]; then
+        log_step "Mapping cloud profile assets to local session ($USER) …"
+        mkdir -p "$LOCAL_USER_PATH"
+        mv "$CLOUD_USER_PATH" "$LOCAL_USER_PATH/"
+        log_ok "Profile mapped successfully."
     fi
-
-    # Skip if already installed
-    local paths=(
-        "$PREFIX_DIR/drive_c/Program Files/OpenIV/OpenIV.exe"
-        "$PREFIX_DIR/drive_c/Program Files (x86)/OpenIV/OpenIV.exe"
-    )
-    for p in "${paths[@]}"; do
-        if [ -f "$p" ]; then
-            log_ok "OpenIV already installed (found $p)"
-            return 0
-        fi
-    done
-
-    export WINEPREFIX="$PREFIX_DIR"
-    export WINEARCH="win64"
-    export WINEDLLOVERRIDES="winemenubuilder.exe=d"
-    export WINEDEBUG="${WINEDEBUG:--all}"
-    PATH="$WINE_DIR/bin:$PATH"
-
-    log_step "Running bundled OpenIVSetup.exe (/VERYSILENT) …"
-    "$WINE_BINARY" "$BUNDLED_OPENIV_EXE" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART || \
-        log_warn "Installer exit code non-zero (may be benign)"
-
-    "$WINE_SERVER" -k 2>/dev/null || true
-    log_ok "Installation phase complete"
 }
 
 # ── 6.  Verification ──────────────────────────────────────────────────────────
 verify_installation() {
     log_header "Verification"
 
-    local paths=(
-        "$PREFIX_DIR/drive_c/Program Files/OpenIV/OpenIV.exe"
-        "$PREFIX_DIR/drive_c/Program Files (x86)/OpenIV/OpenIV.exe"
-    )
-    for p in "${paths[@]}"; do
-        if [ -f "$p" ]; then
-            OPENIV_EXE="$p"
-            log_ok "OpenIV executable found: $p"
-            return 0
-        fi
-    done
+    local target="$PREFIX_DIR/drive_c/users/$USER/AppData/Local/New Technology Studio/Apps/OpenIV/OpenIV.exe"
+    if [ -f "$target" ]; then
+        OPENIV_EXE="$target"
+        log_ok "OpenIV executable found: $target"
+        return 0
+    fi
 
     local found
-    found=$(find "$PREFIX_DIR/drive_c" -maxdepth 4 -name "OpenIV*.exe" -type f 2>/dev/null | head -1 || true)
+    found=$(find "$PREFIX_DIR/drive_c" -maxdepth 6 -name "OpenIV.exe" -type f 2>/dev/null | head -1 || true)
     if [ -n "$found" ]; then
         OPENIV_EXE="$found"
         log_ok "OpenIV executable found: $found"
         return 0
     fi
 
-    log_warn "OpenIV executable not found after installation."
+    log_warn "OpenIV executable not found in the pre-installed prefix."
     return 1
 }
 
@@ -203,14 +172,16 @@ create_launchers() {
         printf '\211PNG\r\n\032\n\000\000\000\rIHDR\000\000\000\001\000\000\000\001\010\002\000\000\000\220wS\336\000\000\000\022IDATx\234c\370\017\000\000\001\001\001\002\370\217\374\351\000\000\000\000IEND\246B`\202' > "$icon_path"
     fi
 
-    # Wrapper – uses the system-installed wine
+    # Wrapper – uses the bundled high-compatibility Wine-GE runtime
     cat > "$wrapper_script" << WRAPEOF
 #!/bin/bash
 # OpenIV launcher – generated by OpenIVLinuxInstaller
 export WINEPREFIX="$PREFIX_DIR"
-export WINEARCH="win64"
+export WINEARCH="win32"
 export WINEDEBUG="${WINEDEBUG:--all}"
-exec wine "$OPENIV_EXE"
+export WINEDLLOVERRIDES="d3d11,dxgi=n"
+export PATH="$WINE_DIR/bin:\$PATH"
+exec "$WINE_BINARY" "\$@"
 WRAPEOF
     chmod +x "$wrapper_script"
 
@@ -242,8 +213,8 @@ DESKTOPEOF
 
 # ── 8.  Summary ───────────────────────────────────────────────────────────────
 print_summary() {
-    echo ""; log_header "Installation Complete"; echo ""
-    echo -e "  ${GREEN}OpenIV is installed and ready.${NC}"
+    echo ""; log_header "Launch Ready"; echo ""
+    echo -e "  ${GREEN}OpenIV is pre-installed and ready to launch.${NC}"
     echo ""
     echo -e "  ${BOLD}Launch methods:${NC}"
     echo -e "    ${GREEN}1.${NC} Terminal: ${CYAN}openiv${NC}"
@@ -256,7 +227,7 @@ print_summary() {
 
 launch_openiv() {
     [ -n "$OPENIV_EXE" ] && [ -f "$OPENIV_EXE" ] || { log_warn "OpenIV unavailable — skipping launch."; return; }
-    export WINEPREFIX="$PREFIX_DIR" WINEARCH="win64" WINEDEBUG="${WINEDEBUG:--all}"
+    export WINEPREFIX="$PREFIX_DIR" WINEARCH="win32" WINEDEBUG="${WINEDEBUG:--all}" WINEDLLOVERRIDES="d3d11,dxgi=n"
     PATH="$WINE_DIR/bin:$PATH"
     exec "$WINE_BINARY" "$OPENIV_EXE"
 }
@@ -265,8 +236,8 @@ launch_openiv() {
 main() {
     echo ""
     echo -e "${CYAN}  ╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}  ║${NC}          ${BOLD}OpenIV Linux Installer${NC}                          ${CYAN}║${NC}"
-    echo -e "${CYAN}  ║${NC}          ${GREEN}[100% offline mode – nothing downloaded at runtime]${NC} ${CYAN}║${NC}"
+    echo -e "${CYAN}  ║${NC}          ${BOLD}OpenIV Linux Launcher v7${NC}                          ${CYAN}║${NC}"
+    echo -e "${CYAN}  ║${NC}          ${GREEN}[Self-contained – DXVK 2.4 + Wine-GE]${NC}                ${CYAN}║${NC}"
     echo -e "${CYAN}  ╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 
@@ -274,15 +245,15 @@ main() {
     setup_directories
     ensure_wine
     ensure_prefix
-    install_openiv_silent
+    map_cloud_profile
 
     if verify_installation; then
         create_launchers
         print_summary
         launch_openiv
     else
-        log_warn "OpenIV executable not found. Installer may have failed."
-        log_warn "Check $PREFIX_DIR/drive_c/Program Files/OpenIV/ manually."
+        log_warn "OpenIV executable not found in the pre-installed prefix."
+        log_warn "Check $PREFIX_DIR/drive_c/users/ manually."
         exit 5
     fi
 }

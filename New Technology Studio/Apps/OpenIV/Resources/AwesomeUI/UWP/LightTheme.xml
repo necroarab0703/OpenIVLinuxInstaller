@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AwesomeUI.ResourceDictionary Version="1.0">
+      <Color Name="SystemAltHighColor">#FFFFFFFF</Color>
+      <Color Name="SystemAltLowColor">#33FFFFFF</Color>
+      <Color Name="SystemAltMediumColor">#99FFFFFF</Color>
+      <Color Name="SystemAltMediumHighColor">#CCFFFFFF</Color>
+      <Color Name="SystemAltMediumLowColor">#66FFFFFF</Color>
+      <Color Name="SystemBaseHighColor">#FF000000</Color>
+      <Color Name="SystemBaseLowColor">#33000000</Color>
+      <Color Name="SystemBaseMediumColor">#99000000</Color>
+      <Color Name="SystemBaseMediumHighColor">#CC000000</Color>
+      <Color Name="SystemBaseMediumLowColor">#66000000</Color>
+      <Color Name="SystemChromeAltLowColor">#FF171717</Color>
+      <Color Name="SystemChromeBlackHighColor">#FF000000</Color>
+      <Color Name="SystemChromeBlackLowColor">#33000000</Color>
+      <Color Name="SystemChromeBlackMediumLowColor">#66000000</Color>
+      <Color Name="SystemChromeBlackMediumColor">#CC000000</Color>
+      <Color Name="SystemChromeDisabledHighColor">#FFCCCCCC</Color>
+      <Color Name="SystemChromeDisabledLowColor">#FF7A7A7A</Color>
+      <Color Name="SystemChromeHighColor">#FFCCCCCC</Color>
+      <Color Name="SystemChromeLowColor">#FFF2F2F2</Color>
+      <Color Name="SystemChromeMediumColor">#FFE6E6E6</Color>
+      <Color Name="SystemChromeMediumLowColor">#FFF2F2F2</Color>
+      <Color Name="SystemChromeWhiteColor">#FFFFFFFF</Color>
+      <Color Name="SystemListLowColor">#19000000</Color>
+      <Color Name="SystemListMediumColor">#33000000</Color>
+</AwesomeUI.ResourceDictionary>

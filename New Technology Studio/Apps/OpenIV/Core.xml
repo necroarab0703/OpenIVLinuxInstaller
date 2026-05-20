@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ApplicationConfig version="4.0">
+  <Client>
+    <Path>C:\users\steamuser\AppData\Local\New Technology Studio\Apps\OpenIV\</Path>
+    <HID>4300-0000</HID>
+    <Key>{6C38737C-850D-4692-A2EC-CB244EADE860}</Key>
+  </Client>
+</ApplicationConfig>

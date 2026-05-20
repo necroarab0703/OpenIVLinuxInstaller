@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataBase>
+  <case count="4">
+    <TSCOAsm_enter>
+      <TSCOAsm_native value="GET_PLAYER_ID">
+        <TSCOAsm_native value="CONVERT_INT_TO_PLAYERINDEX">
+          <TSCOAsm_ret>GetPlayerIndex</TSCOAsm_ret>
+        </TSCOAsm_native>
+      </TSCOAsm_native>
+    </TSCOAsm_enter>
+  </case>
+</DataBase>
