@@ -22,23 +22,13 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq \
             wget curl xz-utils tar \
-            desktop-file-utils libgdk-pixbuf2.0-dev \
-            winetricks cabextract
+            desktop-file-utils libgdk-pixbuf2.0-dev
 
-      # Pre-bake Wine Prefix with Winetricks + DXVK
-      - name: Pre-bake Wine Prefix with Runtimes
+      # Initialize Base Wine Prefix with DXVK + pre-installed app
+      - name: Initialize Base Wine Prefix
         run: |
           export WINEPREFIX="$GITHUB_WORKSPACE/prebaked_prefix"
-          mkdir -p "$WINEPREFIX"
-          mkdir -p "$WINEPREFIX/drive_c/users/runner/AppData/Local/"
-
-          wget -q https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks -O /tmp/winetricks
-          chmod +x /tmp/winetricks
-
-          sudo apt-get install -y -qq xvfb
-          xvfb-run -a /tmp/winetricks -q dotnet48
-          xvfb-run -a /tmp/winetricks -q vcrun2019
-          xvfb-run -a /tmp/winetricks -q d3dx11_43
+          wineboot -i
 
           # Fetch DXVK 2.4 and inject into prefix
           wget -q https://github.com/doitsujin/dxvk/releases/download/v2.4/dxvk-2.4.tar.gz -O /tmp/dxvk.tar.gz
@@ -94,7 +84,7 @@ jobs:
         with:
           name: OpenIV Portable Launcher ${{ github.ref_name }}
           body: |
-            ## OpenIV Self-Contained Portable Release (v7.0.0)
+            ## OpenIV Self-Contained Portable Release (v7.0.2)
 
             ### Downloads
             - **AppImage**: `OpenIV-x86_64.AppImage` — **100% offline**, zero network at runtime
