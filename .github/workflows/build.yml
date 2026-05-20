@@ -55,29 +55,15 @@ jobs:
           cd /tmp && ./appimagetool --appimage-extract 2>/dev/null || true
 
       # Assemble AppDir
-      - name: Setup AppDir
+      - name: Setup AppDir Structure
         run: |
-          APP_DIR="Build/AppDir"
-          mkdir -p "$APP_DIR/usr/share/openiv/wine" \
-                   "$APP_DIR/usr/share/applications"
+          mkdir -p Build/AppDir/usr/share/openiv/
+          # Copy the baked prefix containing the system runtimes and New Technology Studio straight into the package
+          cp -r prebaked_prefix Build/AppDir/usr/share/openiv/prefix
 
-          # Scripts
-          cp OpenIVScripts/OpenIVLinuxInstaller.sh "$APP_DIR/"
-          cp AppImage/AppRun "$APP_DIR/"
-
-          # Icons / desktop
-          cp AppImage/openiv.desktop "$APP_DIR/"
-          cp AppImage/openiv.png "$APP_DIR/"
-
-          # Pack & copy pre-baked prefix (includes NTS + DXVK + runtimes)
-          cd "$GITHUB_WORKSPACE/prebaked_prefix" && tar -cJf "$GITHUB_WORKSPACE/$APP_DIR/usr/share/openiv/prefix-core.tar.xz" .
-
-          # Portable Wine-GE (high-compatibility runtime with bundled libfreetype, gnutls)
-          wget -q "https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-31/wine-lutris-GE-Proton8-31-x86_64.tar.xz" \
-            -O /tmp/wine-bundle.tar.xz
-          tar -xJf /tmp/wine-bundle.tar.xz -C "$APP_DIR/usr/share/openiv/wine" --strip-components=1
-
-          chmod +x "$APP_DIR/AppRun" "$APP_DIR/OpenIVLinuxInstaller.sh"
+          # Copy the launcher script template
+          cp OpenIVScripts/OpenIVLinuxInstaller.sh Build/AppDir/AppRun
+          chmod +x Build/AppDir/AppRun
 
       # Build AppImage
       - name: Build AppImage
@@ -91,7 +77,7 @@ jobs:
         with:
           name: OpenIV Portable Launcher ${{ github.ref_name }}
           body: |
-            ## OpenIV Self-Contained Portable Release (v7.0.3)
+            ## OpenIV Self-Contained Portable Release (v7.1.0)
 
             ### Downloads
             - **AppImage**: `OpenIV-x86_64.AppImage` — **100% offline**, zero network at runtime
