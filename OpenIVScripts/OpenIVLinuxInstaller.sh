@@ -17,7 +17,7 @@ WINE_BINARY="$BUNDLED_WINE/bin/wine"
 export WINEARCH="win32"
 export WINEPREFIX="$PREFIX_DIR"
 export PATH="$BUNDLED_WINE/bin:$PATH"
-export LD_LIBRARY_PATH="$BUNDLED_WINE/lib:${LD_LIBRARY_PATH:-}"
+export LD_LIBRARY_PATH="$APPDIR/usr/share/openiv/wine/lib:/usr/lib:/usr/lib32:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
 
 OPENIV_EXE=""
 
@@ -121,6 +121,7 @@ create_launchers() {
 export WINEPREFIX="$PREFIX_DIR"
 export WINEARCH="win32"
 export WINEDEBUG="${WINEDEBUG:--all}"
+export LD_LIBRARY_PATH="$APPDIR/usr/share/openiv/wine/lib:/usr/lib:/usr/lib32:/usr/lib/x86_64-linux-gnu:\${LD_LIBRARY_PATH:-}"
 exec "$WINE_BINARY" "\$@"
 WRAPEOF
     chmod +x "$LAUNCHER_SCRIPT"
