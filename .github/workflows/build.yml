@@ -24,6 +24,13 @@ jobs:
             wget curl xz-utils tar \
             desktop-file-utils libgdk-pixbuf2.0-dev
 
+      # Install Wine engine on the runner host
+      - name: Install System Wine Engine
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y wine32 wine64 winetricks
+
       # Initialize Base Wine Prefix with DXVK + pre-installed app
       - name: Initialize Base Wine Prefix
         run: |
@@ -84,7 +91,7 @@ jobs:
         with:
           name: OpenIV Portable Launcher ${{ github.ref_name }}
           body: |
-            ## OpenIV Self-Contained Portable Release (v7.0.2)
+            ## OpenIV Self-Contained Portable Release (v7.0.3)
 
             ### Downloads
             - **AppImage**: `OpenIV-x86_64.AppImage` — **100% offline**, zero network at runtime
