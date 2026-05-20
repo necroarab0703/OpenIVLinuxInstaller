@@ -31,6 +31,15 @@ jobs:
           
           # Install the massive runtimes on the cloud server inside a headless virtual frame buffer
           xvfb-run -a /tmp/winetricks -q dotnet48
+
+          # Fetch stable DXVK binaries
+          wget -q https://github.com/doitsujin/dxvk/releases/download/v2.4/dxvk-2.4.tar.gz -O /tmp/dxvk.tar.gz
+          tar -zxf /tmp/dxvk.tar.gz -C /tmp/
+
+          # Copy 32-bit DXVK DLLs into the cloud prefix system folders
+          cp /tmp/dxvk-2.4/x32/d3d11.dll "$GITHUB_WORKSPACE/prebaked_prefix/drive_c/windows/system32/"
+          cp /tmp/dxvk-2.4/x32/dxgi.dll "$GITHUB_WORKSPACE/prebaked_prefix/drive_c/windows/system32/"
+
           xvfb-run -a /tmp/winetricks -q vcrun2019
           xvfb-run -a /tmp/winetricks -q d3dx11_43
 
@@ -69,9 +78,9 @@ jobs:
         with:
           name: OpenIV Portable Launcher ${{ github.ref_name }}
           body: |
-            ## OpenIV Pre-Installed Portable Release (v6.0.0)
+            ## OpenIV DXVK Release (v6.2.0)
             - **Direct Launch:** OpenIV is pre-installed and ready to run — no setup wizard.
-            - **Zero Installation:** Extracts and launches OpenIV.exe immediately.
+            - **DXVK 2.4 Injected:** Vulkan translation layers pre-deployed into the prefix.
             - **Offline Capable:** All assets bundled, no network required.
           files: OpenIV-x86_64.AppImage
         env:

@@ -121,6 +121,7 @@ create_launchers() {
 export WINEPREFIX="$PREFIX_DIR"
 export WINEARCH="win32"
 export WINEDEBUG="${WINEDEBUG:--all}"
+export WINEDLLOVERRIDES="d3d11,dxgi=n"
 export LD_LIBRARY_PATH="$APPDIR/usr/share/openiv/wine/lib:/usr/lib:/usr/lib32:/usr/lib/x86_64-linux-gnu:\${LD_LIBRARY_PATH:-}"
 exec "$WINE_BINARY" "\$@"
 WRAPEOF
@@ -166,7 +167,7 @@ print_summary() {
 
 launch_openiv() {
     [ -n "$OPENIV_EXE" ] && [ -f "$OPENIV_EXE" ] || { log_warn "OpenIV unavailable — skipping launch."; return; }
-    export WINEPREFIX="$PREFIX_DIR" WINEARCH="win32" WINEDEBUG="${WINEDEBUG:--all}"
+    export WINEPREFIX="$PREFIX_DIR" WINEARCH="win32" WINEDEBUG="${WINEDEBUG:--all}" WINEDLLOVERRIDES="d3d11,dxgi=n"
     exec "$WINE_BINARY" "$OPENIV_EXE"
 }
 
