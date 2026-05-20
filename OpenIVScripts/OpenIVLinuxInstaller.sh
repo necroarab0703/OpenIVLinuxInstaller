@@ -122,8 +122,7 @@ export WINEPREFIX="$PREFIX_DIR"
 export WINEARCH="win32"
 export WINEDEBUG="${WINEDEBUG:--all}"
 export WINEDLLOVERRIDES="d3d11,dxgi=n"
-export LD_LIBRARY_PATH="$APPDIR/usr/share/openiv/wine/lib:/usr/lib:/usr/lib32:/usr/lib/x86_64-linux-gnu:\${LD_LIBRARY_PATH:-}"
-exec "$WINE_BINARY" "\$@"
+exec wine "\$@"
 WRAPEOF
     chmod +x "$LAUNCHER_SCRIPT"
 
